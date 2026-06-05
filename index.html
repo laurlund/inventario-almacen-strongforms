@@ -36,7 +36,7 @@
   --display: 'Epilogue', sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-.hidden{display:none!important}
+.hidden{display:none}
 html,body{height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:14px;display:flex;flex-direction:column}
 
@@ -574,7 +574,7 @@ input[type=file]{display:none}
 <!-- ══════════════════════════════
      PANEL: ADMIN (oculto para Marcos)
 ══════════════════════════════ -->
-<div id="adminPanel" class="hidden" style="position:fixed;inset:0;background:var(--bg);z-index:900;flex-direction:column;overflow:hidden">
+<div id="adminPanel" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:900;flex-direction:column;overflow:hidden">
 
   <!-- Admin topbar -->
   <div style="flex-shrink:0;height:50px;display:flex;align-items:center;padding:0 14px;background:var(--s1);border-bottom:3px solid var(--blue);gap:10px">
