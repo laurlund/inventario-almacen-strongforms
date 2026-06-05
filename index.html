@@ -1445,11 +1445,6 @@ function exportCSV(){
 const DEFAULT_PW = 'strongforms2024';
 
 // Hash simple (no criptográfico pero suficiente para uso interno)
-async function hashPw(str){
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-
 // Cifrado XOR básico con contraseña como clave (ofusca las keys en localStorage)
 function xorCipher(text, key){
   let out = '';
@@ -1477,6 +1472,12 @@ function setCred(name, val){ localStorage.setItem('sf4_c_'+name, xorCipher(val, 
 function getApiKey(){ return getCred('apikey'); }
 function getModel()  { return localStorage.getItem('sf4_model') || 'claude-sonnet-4-5'; }
 
+// ── CONTRASEÑA ADMIN — sistema síncrono sin async ──
+// Guarda la contraseña ofuscada con XOR, sin SHA-256 async que puede fallar
+function savePw(pw){ localStorage.setItem('sf4_pw', xorCipher(pw, 'SF_ADM_2024')); }
+function checkPw(pw){ return xorDecipher(localStorage.getItem('sf4_pw') || '', 'SF_ADM_2024') === pw; }
+function hasPw(){ return !!localStorage.getItem('sf4_pw'); }
+
 // Estado admin
 let adminAuthenticated = false;
 
@@ -1493,29 +1494,24 @@ function closeAdminLogin(){
   document.getElementById('adminLoginModal').style.display = 'none';
 }
 
-async function checkAdminPw(){
+function checkAdminPw(){
   const entered = document.getElementById('adminPwIn').value.trim();
   if(!entered) return;
 
-  const storedHash = localStorage.getItem('sf4_pwhash');
   let valid = false;
 
-  if(!storedHash){
-    // Primera vez en este dominio — solo acepta la contraseña por defecto
+  if(!hasPw()){
+    // Primera vez — acepta contraseña por defecto y la guarda
     valid = (entered === DEFAULT_PW);
-    if(valid){
-      const h = await hashPw(DEFAULT_PW);
-      localStorage.setItem('sf4_pwhash', h);
-    }
+    if(valid) savePw(DEFAULT_PW);
   } else {
-    const enteredHash = await hashPw(entered);
-    valid = (enteredHash === storedHash);
+    valid = checkPw(entered);
   }
 
   if(valid){
     adminAuthenticated = true;
     document.getElementById('adminLoginModal').style.display = 'none';
-    setTimeout(() => openAdmin(), 50);
+    openAdmin();
   } else {
     document.getElementById('adminLoginErr').style.display = 'block';
     document.getElementById('adminPwIn').value = '';
@@ -1549,36 +1545,30 @@ function closeAdmin(){
 }
 
 // ── CAMBIO CONTRASEÑA ──
-async function changePassword(){
-  const cur    = document.getElementById('pwCurrent').value;
-  const nw     = document.getElementById('pwNew').value;
-  const rep    = document.getElementById('pwRepeat').value;
-  const msg    = document.getElementById('pwMsg');
+function changePassword(){
+  const cur = document.getElementById('pwCurrent').value;
+  const nw  = document.getElementById('pwNew').value;
+  const rep = document.getElementById('pwRepeat').value;
+  const msg = document.getElementById('pwMsg');
 
-  const storedHash = localStorage.getItem('sf4_pwhash');
-  const curHash    = await hashPw(cur);
-  const isDefault  = !storedHash && cur === DEFAULT_PW;
+  const isFirst  = !hasPw() && cur === DEFAULT_PW;
+  const isCurrent = hasPw() && checkPw(cur);
 
-  if(!isDefault && curHash !== storedHash){
+  if(!isFirst && !isCurrent){
     msg.textContent = '✕ Contraseña actual incorrecta.';
-    msg.style.color = 'var(--red)';
-    msg.classList.remove('hidden'); return;
+    msg.style.color = 'var(--red)'; msg.style.display = 'block'; return;
   }
   if(nw.length < 6){
-    msg.textContent = '✕ La nueva contraseña debe tener al menos 6 caracteres.';
-    msg.style.color = 'var(--red)';
-    msg.classList.remove('hidden'); return;
+    msg.textContent = '✕ Mínimo 6 caracteres.';
+    msg.style.color = 'var(--red)'; msg.style.display = 'block'; return;
   }
   if(nw !== rep){
     msg.textContent = '✕ Las contraseñas no coinciden.';
-    msg.style.color = 'var(--red)';
-    msg.classList.remove('hidden'); return;
+    msg.style.color = 'var(--red)'; msg.style.display = 'block'; return;
   }
-  const newHash = await hashPw(nw);
-  localStorage.setItem('sf4_pwhash', newHash);
+  savePw(nw);
   msg.textContent = '✓ Contraseña cambiada correctamente.';
-  msg.style.color = 'var(--green)';
-  msg.classList.remove('hidden');
+  msg.style.color = 'var(--green)'; msg.style.display = 'block';
   document.getElementById('pwCurrent').value = '';
   document.getElementById('pwNew').value = '';
   document.getElementById('pwRepeat').value = '';
