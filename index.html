@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Strongforms · Inventario</title>
+<link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600&family=Epilogue:wght@700;900&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   TOKENS — Concrete industrial. Dark base,
+   amber signal, steel accents.
+═══════════════════════════════════════ */
+:root{
+  --bg:      #0c0d0f;
+  --s1:      #131416;
+  --s2:      #1a1c1f;
+  --s3:      #212326;
+  --s4:      #292b2f;
+  --border:  #2d2f34;
+  --border2: #3a3d44;
+  --acc:     #e8971e;
+  --acc2:    #c07a10;
+  --acc-dim: rgba(232,151,30,.1);
+  --acc-glow:rgba(232,151,30,.2);
+  --blue:    #4287d6;
+  --blue-dim:rgba(66,135,214,.1);
+  --green:   #2ea855;
+  --green-dim:rgba(46,168,85,.1);
+  --red:     #bf3535;
+  --red-dim: rgba(191,53,53,.1);
+  --yellow:  #d4920f;
+  --text:    #c8cad4;
+  --text2:   #7c8090;
+  --text3:   #4a4d58;
+  --mono:    'Azeret Mono', monospace;
+  --display: 'Epilogue', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:14px;display:flex;flex-direction:column}
+
+/* ── TOPBAR ── */
+.topbar{flex-shrink:0;height:50px;display:flex;align-items:center;padding:0 14px;background:var(--s1);border-bottom:1px solid var(--border);gap:10px}
+.logo{font-family:var(--display);font-size:1.2rem;font-weight:900;color:var(--acc);letter-spacing:-0.5px;flex:1}
+.logo span{font-size:.58rem;color:var(--text3);letter-spacing:2px;font-family:var(--mono);font-weight:400;display:block;text-transform:uppercase;margin-top:-1px}
+.pill{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:.58rem;letter-spacing:1px;text-transform:uppercase;border:1px solid var(--border);background:var(--s2);color:var(--text3);cursor:pointer;transition:all .2s}
+.pill.on{border-color:rgba(46,168,85,.4);color:var(--green);background:var(--green-dim)}
+.pill .dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+.ibtn{width:32px;height:32px;background:var(--s2);border:1px solid var(--border);border-radius:6px;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:all .2s;flex-shrink:0}
+.ibtn:hover{border-color:var(--acc);color:var(--acc)}
+
+/* ── TABS ── */
+.tabs{flex-shrink:0;display:flex;background:var(--s1);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1;padding:10px 8px;font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);cursor:pointer;border:none;background:none;font-family:var(--mono);border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s}
+.tab.active{color:var(--acc);border-bottom-color:var(--acc)}
+
+/* ── PANELS ── */
+.panel{display:none;flex:1;flex-direction:column;overflow:hidden}
+.panel.active{display:flex}
+.scroll{flex:1;overflow-y:auto;padding:14px;padding-bottom:28px}
+.scroll::-webkit-scrollbar{width:2px}
+.scroll::-webkit-scrollbar-thumb{background:var(--border)}
+
+/* ── CARD ── */
+.card{background:var(--s1);border:1px solid var(--border);border-radius:9px;overflow:hidden;margin-bottom:11px}
+.card-hdr{padding:8px 13px;background:var(--s2);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.card-hdr-lbl{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--text3)}
+.card-body{padding:13px}
+
+/* ── FORM ── */
+.field{margin-bottom:12px}
+.lbl{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:5px;display:block}
+input[type=text],input[type=password],input[type=number],select,textarea{
+  width:100%;background:var(--s2);border:1px solid var(--border);border-radius:7px;
+  padding:10px 12px;color:var(--text);font-family:var(--mono);font-size:.85rem;
+  outline:none;transition:border-color .2s;-webkit-appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--acc)}
+select option{background:var(--s2)}
+textarea{resize:vertical}
+input[type=file]{display:none}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:11px 14px;border:none;border-radius:7px;font-family:var(--mono);font-size:.65rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .15s;font-weight:600;white-space:nowrap}
+.btn-acc{background:var(--acc);color:#0c0d0f}
+.btn-acc:hover{background:#f4a82a;box-shadow:0 0 18px var(--acc-glow)}
+.btn-acc:disabled{background:var(--s4);color:var(--text3);cursor:not-allowed;box-shadow:none}
+.btn-ghost{background:var(--s3);color:var(--text);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--acc);color:var(--acc)}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-full{width:100%}
+.brow{display:flex;gap:8px;margin-bottom:11px}
+.brow .btn{flex:1}
+
+/* ── CHIPS ── */
+.chip{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:20px;font-size:.58rem;letter-spacing:1px;text-transform:uppercase;font-weight:600}
+.chip-ok  {background:var(--green-dim);color:var(--green);border:1px solid rgba(46,168,85,.3)}
+.chip-warn{background:rgba(212,146,15,.1);color:var(--yellow);border:1px solid rgba(212,146,15,.3)}
+.chip-err {background:var(--red-dim);color:var(--red);border:1px solid rgba(191,53,53,.3)}
+.chip-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(66,135,214,.3)}
+
+/* ── BARS ── */
+.bar{padding:9px 12px;border-radius:0 7px 7px 0;font-size:.72rem;line-height:1.6;margin-bottom:10px}
+.bar-note {border-left:3px solid var(--acc);background:var(--acc-dim);color:var(--acc)}
+.bar-alert{border-left:3px solid var(--red);background:var(--red-dim);color:#e07070}
+.bar-ok   {border-left:3px solid var(--green);background:var(--green-dim);color:var(--green)}
+.bar-blue {border-left:3px solid var(--blue);background:var(--blue-dim);color:var(--blue)}
+
+/* ── CAPTURE ── */
+.cap-zone{position:relative;border:2px dashed var(--border);border-radius:9px;min-height:185px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:var(--s1);transition:border-color .2s;margin-bottom:10px}
+.cap-zone:hover{border-color:var(--acc)}
+.cap-zone img{width:100%;object-fit:cover;display:block;max-height:220px}
+.cap-ph{display:flex;flex-direction:column;align-items:center;gap:7px;color:var(--text3);font-size:.65rem;letter-spacing:1px;text-transform:uppercase}
+.cap-icon{font-size:2.2rem;opacity:.35}
+.loading-ov{position:absolute;inset:0;background:rgba(0,0,0,.8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--acc);z-index:20}
+.spinner{width:26px;height:26px;border:2px solid var(--border);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Thumbs */
+.thumbs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.thumb{position:relative;width:60px;height:60px;border-radius:6px;overflow:hidden;border:1px solid var(--border);flex-shrink:0}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.tdel{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.8);border:none;color:#fff;border-radius:3px;width:16px;height:16px;font-size:.6rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.tadd{width:60px;height:60px;border-radius:6px;border:1px dashed var(--border);background:var(--s2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:.55rem;color:var(--text3);cursor:pointer;flex-shrink:0;transition:all .2s;text-align:center;letter-spacing:1px;text-transform:uppercase}
+.tadd:hover{border-color:var(--acc);color:var(--acc)}
+
+/* Confidence */
+.conf-row{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.conf-bg{flex:1;height:4px;background:var(--s4);border-radius:2px;overflow:hidden}
+.conf-fill{height:100%;border-radius:2px;transition:width .4s}
+.conf-lbl{font-size:.58rem;color:var(--text3);white-space:nowrap}
+
+/* Piece rows */
+.piece-row{display:flex;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);gap:7px}
+.piece-row:last-child{border-bottom:none}
+.piece-ico{font-size:.95rem;width:22px;text-align:center;flex-shrink:0}
+.piece-info{flex:1;min-width:0}
+.piece-name{font-size:.8rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.piece-conf{font-size:.6rem}
+.piece-count{font-size:1.05rem;color:var(--acc);font-weight:700;min-width:28px;text-align:right}
+.piece-unit{font-size:.58rem;color:var(--text3)}
+.total-bar{display:flex;justify-content:space-between;align-items:center;padding:9px 13px;background:var(--s2);border-top:1px solid var(--border)}
+.total-bar span{font-size:.58rem;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase}
+.total-bar strong{font-size:1.1rem;color:var(--acc)}
+
+/* Mode toggle */
+.mtoggle{display:flex;border:1px solid var(--border);border-radius:7px;overflow:hidden;margin-bottom:11px}
+.mbtn{flex:1;padding:9px 6px;text-align:center;font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:none;background:var(--s2);color:var(--text3);font-family:var(--mono);transition:all .2s}
+.mbtn.active{background:var(--acc-dim);color:var(--acc)}
+
+/* Grid */
+.grid-outer{position:relative;padding-left:18px;margin-bottom:7px}
+.col-lbls{display:flex;padding-left:0;margin-bottom:1px}
+.col-lbl{flex:1;text-align:center;font-size:.46rem;color:var(--text3)}
+.row-lbls{position:absolute;left:0;top:0;bottom:0;display:flex;flex-direction:column}
+.row-lbl{flex:1;display:flex;align-items:center;font-size:.46rem;color:var(--text3)}
+.gplan{position:relative;width:100%;aspect-ratio:16/9;border-radius:7px;overflow:hidden;background:var(--s3);border:1px solid var(--border)}
+.plan-bg{width:100%;height:100%;object-fit:cover;opacity:.4}
+.govl{position:absolute;inset:0;display:grid}
+.gcell{border:1px solid rgba(255,255,255,.04);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.gcell:hover{background:rgba(232,151,30,.15);border-color:rgba(232,151,30,.35)}
+.gcell.sel{background:rgba(232,151,30,.28);border-color:var(--acc)}
+.gcell.occ{background:rgba(66,135,214,.1);border-color:rgba(66,135,214,.2)}
+.gcell-l{font-size:.42rem;color:rgba(255,255,255,.18);pointer-events:none}
+.gcell.sel .gcell-l{color:var(--acc)}
+
+/* Breadcrumb */
+.bc{display:flex;align-items:center;gap:5px;flex-wrap:wrap;padding:7px 11px;background:var(--s2);border-radius:7px;border:1px solid var(--border);margin-bottom:9px}
+.bc-item{font-size:.75rem;color:var(--acc);font-weight:600}
+.bc-sep{color:var(--text3);font-size:.68rem}
+
+/* ── CATALOG ── */
+.cat-item{display:flex;align-items:center;padding:10px 12px;background:var(--s1);border:1px solid var(--border);border-radius:8px;margin-bottom:7px;gap:9px}
+.cat-ico{width:32px;height:32px;background:var(--s3);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.cat-inf{flex:1;min-width:0}
+.cat-code{font-size:.78rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cat-name{font-size:.62rem;color:var(--text2)}
+.cat-dims{font-size:.58rem;color:var(--text3)}
+.cat-stat{text-align:right;flex-shrink:0}
+.cat-n{font-size:.95rem;color:var(--acc);font-weight:700}
+.cat-l{font-size:.56rem;color:var(--text3);text-transform:uppercase}
+.del-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:.8rem;padding:4px;transition:color .2s}
+.del-btn:hover{color:var(--red)}
+.sect-lbl{font-size:.56rem;color:var(--text3);letter-spacing:2.5px;text-transform:uppercase;padding:10px 0 6px;border-bottom:1px solid var(--border);margin-bottom:8px}
+
+/* ── HISTORY ── */
+.hist-item{background:var(--s1);border:1px solid var(--border);border-radius:9px;margin-bottom:11px;overflow:hidden}
+.hist-hdr{padding:8px 13px;background:var(--s2);display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.hist-date{font-size:.6rem;color:var(--text3);flex:1}
+.hist-loc{font-size:.62rem;color:var(--blue)}
+.hist-total{font-size:.88rem;color:var(--acc);font-weight:700}
+.hist-body{padding:10px 13px}
+.hist-thumb{width:100%;max-height:105px;object-fit:cover;border-radius:6px;margin-bottom:7px;cursor:pointer;border:1px solid var(--border)}
+.hist-pr{display:flex;justify-content:space-between;font-size:.75rem;padding:2px 0}
+.hist-pr span:last-child{color:var(--acc);font-weight:600}
+.hist-link{display:inline-flex;align-items:center;gap:4px;font-size:.6rem;color:var(--blue);text-decoration:none;margin-top:5px;margin-right:8px}
+.hist-link:hover{text-decoration:underline}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:13px}
+.kpi{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+.kpi-v{font-size:1.5rem;font-weight:700;color:var(--acc);line-height:1;font-family:var(--display)}
+.kpi-l{font-size:.56rem;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px}
+.kpi.blue .kpi-v{color:var(--blue)}
+.kpi.green .kpi-v{color:var(--green)}
+
+/* ── MODALS ── */
+.mbd{position:fixed;inset:0;background:rgba(0,0,0,.92);display:flex;align-items:flex-end;justify-content:center;z-index:500}
+.modal{background:var(--s1);border-top:2px solid var(--acc);border-radius:16px 16px 0 0;padding:20px 16px 34px;width:100%;max-width:520px;animation:up .22s ease;max-height:92vh;overflow-y:auto}
+.modal::-webkit-scrollbar{width:2px}
+.modal::-webkit-scrollbar-thumb{background:var(--border)}
+@keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal h3{font-family:var(--display);font-size:1.1rem;font-weight:900;color:var(--acc);margin-bottom:5px}
+.modal p{font-size:.72rem;color:var(--text2);line-height:1.6;margin-bottom:13px}
+.modal-imgs{display:flex;gap:5px;margin-bottom:11px;flex-wrap:wrap}
+.modal-img{height:80px;border-radius:6px;object-fit:cover;flex:1;min-width:70px;border:1px solid var(--border)}
+.sug-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:11px}
+.sug-btn{padding:5px 10px;background:var(--s3);border:1px solid var(--border);border-radius:20px;font-size:.68rem;color:var(--text);cursor:pointer;font-family:var(--mono);transition:all .15s}
+.sug-btn:hover{border-color:var(--acc);color:var(--acc)}
+.sug-btn.sel{background:var(--acc-dim);border-color:var(--acc);color:var(--acc)}
+.more-ph{width:100%;padding:9px;background:var(--s2);border:1px dashed var(--border);border-radius:7px;color:var(--text3);font-size:.65rem;cursor:pointer;font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;transition:all .2s;margin-bottom:10px}
+.more-ph:hover{border-color:var(--acc);color:var(--acc)}
+.divider{border:none;border-top:1px solid var(--border);margin:11px 0}
+
+/* Manual entry highlight */
+.manual-field{background:var(--s1);border:1px solid var(--acc);border-radius:8px;padding:11px;margin-bottom:11px}
+.manual-field .lbl{color:var(--acc)}
+.manual-field input{background:var(--s2);border-color:var(--border2)}
+
+/* Settings */
+.smodal{border-top-color:var(--blue)}
+.smodal h3{color:var(--blue)}
+.setup-step{display:flex;gap:9px;padding:8px 0;border-bottom:1px solid var(--border)}
+.setup-step:last-child{border-bottom:none}
+.sn{width:19px;height:19px;border-radius:50%;background:var(--blue);color:#fff;font-size:.6rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.st{font-size:.7rem;line-height:1.6;color:var(--text2)}
+.st strong{color:var(--text)}
+.st a{color:var(--blue)}
+
+/* Empty */
+.empty{text-align:center;color:var(--text3);font-size:.7rem;letter-spacing:1px;text-transform:uppercase;padding:32px 0;line-height:2}
+</style>
+</head>
+<body>
+
+<!-- ═══ TOPBAR ═══ -->
+<div class="topbar">
+  <!-- Logo: toque largo 5s → abre acceso admin (invisible para Marcos) -->
+  <div class="logo" id="logoBtn" onmousedown="startAdminHold()" ontouchstart="startAdminHold()" onmouseup="cancelAdminHold()" ontouchend="cancelAdminHold()">
+    Strongforms <span>Inventario · Almacén</span>
+  </div>
+  <!-- Pill solo visible cuando admin ha conectado Drive en esta sesión -->
+  <div class="pill hidden" id="drivePill"><div class="dot"></div><span id="drivePillTxt">Drive ✓</span></div>
+</div>
+
+<!-- ═══ TABS ═══ -->
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('scan',this)">📷 Escanear</button>
+  <button class="tab" onclick="switchTab('cat',this)">📦 Catálogo</button>
+  <button class="tab" onclick="switchTab('hist',this)">📋 Historial</button>
+</div>
+
+<!-- ══════════════════════════════
+     PANEL: ESCANEO
+══════════════════════════════ -->
+<div id="panel-scan" class="panel active">
+<div class="scroll">
+
+  <!-- Modo paquete -->
+  <div class="mtoggle">
+    <button class="mbtn active" id="modeNorm" onclick="setMode('normal')">📦 Paquete normal</button>
+    <button class="mbtn" id="modeMix"  onclick="setMode('mixed')">🔀 Paquete mixto</button>
+  </div>
+  <div id="mixBar" class="bar bar-blue hidden">Modo mixto: toma cenital + lateral. La IA buscará activamente distintos tipos mezclados.</div>
+
+  <!-- Capture -->
+  <div class="cap-zone" id="capZone" onclick="triggerCap()">
+    <div class="cap-ph" id="capPh">
+      <div class="cap-icon">📷</div>
+      <div>Toca para fotografiar</div>
+      <div style="font-size:.58rem;opacity:.45;margin-top:1px">Cámara · Galería</div>
+    </div>
+    <img id="prevImg" class="hidden" alt="">
+    <div class="loading-ov hidden" id="loadOv">
+      <div class="spinner"></div>
+      <span id="loadMsg">Analizando…</span>
+    </div>
+  </div>
+  <input type="file" id="fileIn" accept="image/*" capture="environment" onchange="handleFile(event)">
+
+  <!-- Thumbs multi-foto -->
+  <div class="thumbs hidden" id="thumbs"></div>
+
+  <div class="brow">
+    <button class="btn btn-ghost" onclick="triggerCap()">📷 + Foto</button>
+    <button class="btn btn-acc" id="analyzeBtn" disabled onclick="startAnalysis()">▶ Analizar</button>
+  </div>
+
+  <!-- Barra de confianza global -->
+  <div id="confRow" class="conf-row hidden">
+    <div class="conf-bg"><div class="conf-fill" id="confFill"></div></div>
+    <div class="conf-lbl" id="confLbl"></div>
+  </div>
+
+  <!-- Notas / alertas -->
+  <div id="noteBar"  class="bar bar-note  hidden"></div>
+  <div id="alertBar" class="bar bar-alert hidden"></div>
+
+  <!-- Resultado -->
+  <div class="card hidden" id="resultCard">
+    <div class="card-hdr">
+      <span class="card-hdr-lbl">Piezas detectadas</span>
+      <span id="resultChip" class="chip"></span>
+    </div>
+    <div id="resultBody" style="padding:10px 13px"></div>
+    <div class="total-bar">
+      <span>Total unidades</span>
+      <strong id="totalCount">0</strong>
+    </div>
+  </div>
+
+  <!-- Ubicación -->
+  <div id="locSection" class="hidden">
+    <div class="lbl" style="margin:4px 0 8px">Ubicación en almacén</div>
+    <div class="r2" style="margin-bottom:8px">
+      <div>
+        <div class="lbl">Almacén</div>
+        <input type="text" id="locAlm" placeholder="Rabasa" oninput="updateBC()">
+      </div>
+      <div>
+        <div class="lbl">Nave</div>
+        <input type="text" id="locNave" placeholder="Nave 2" oninput="updateBC()">
+      </div>
+    </div>
+
+    <div class="bc" id="bc"><span style="color:var(--text3);font-size:.7rem">Sin seleccionar</span></div>
+
+    <!-- Grid -->
+    <div class="card" style="margin-bottom:10px">
+      <div class="card-hdr">
+        <span class="card-hdr-lbl">Zona</span>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span id="selLbl" style="color:var(--acc);font-size:.68rem;font-weight:600"></span>
+          <button class="ibtn" style="width:26px;height:26px;font-size:.62rem" onclick="openPlanModal()">🗺</button>
+        </div>
+      </div>
+      <div class="card-body" style="padding:10px 11px">
+        <div class="grid-outer">
+          <div class="col-lbls" id="colLbls"></div>
+          <div style="display:flex">
+            <div class="row-lbls" id="rowLbls"></div>
+            <div style="flex:1">
+              <div class="gplan" id="gplan">
+                <img id="planBg" class="plan-bg hidden" alt="">
+                <div class="govl" id="govl"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:8px">
+          <div class="lbl">Zona (toca celda o escribe)</div>
+          <input type="text" id="zonaIn" placeholder="A5" oninput="syncZona()" style="text-transform:uppercase">
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="lbl">Observaciones</div>
+      <textarea id="obsIn" rows="2" placeholder="Junto a viga central, en palets…"></textarea>
+    </div>
+  </div>
+
+  <!-- Save row -->
+  <div class="brow" id="saveRow" style="display:none">
+    <button class="btn btn-ghost" onclick="resetScan()">🗑 Descartar</button>
+    <button class="btn btn-acc" onclick="saveRecord()">💾 Guardar</button>
+  </div>
+  <div id="okBar" class="bar bar-ok hidden"></div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════
+     PANEL: CATÁLOGO
+══════════════════════════════ -->
+<div id="panel-cat" class="panel">
+<div class="scroll">
+  <button class="btn btn-acc btn-full" style="margin-bottom:13px" onclick="openCatModal()">+ Nueva pieza al catálogo</button>
+  <div class="sect-lbl">Placas fabricadas</div>
+  <div id="catPiezas"></div>
+  <div class="sect-lbl">Perfiles en bruto</div>
+  <div id="catPerfiles"></div>
+</div>
+</div>
+
+<!-- ══════════════════════════════
+     PANEL: HISTORIAL
+══════════════════════════════ -->
+<div id="panel-hist" class="panel">
+<div class="scroll">
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-v" id="kpiScans">0</div><div class="kpi-l">Escaneos</div></div>
+    <div class="kpi green"><div class="kpi-v" id="kpiUds">0</div><div class="kpi-l">Uds. totales</div></div>
+  </div>
+  <button class="btn btn-ghost btn-full" style="margin-bottom:11px" onclick="exportCSV()">📤 Exportar CSV</button>
+  <div id="histList"></div>
+</div>
+</div>
+
+<!-- ══════════════════════════════
+     MODAL: IDENTIFICAR PIEZA
+══════════════════════════════ -->
+<div id="identModal" class="mbd hidden">
+<div class="modal">
+  <h3 id="identTitle">Identificar pieza</h3>
+  <p id="identDesc"></p>
+
+  <!-- Fotos de la sesión -->
+  <div class="modal-imgs" id="identImgs"></div>
+
+  <!-- Chip confianza -->
+  <div id="identConf" class="chip" style="margin-bottom:11px"></div>
+
+  <!-- Botón más foto -->
+  <button class="more-ph" onclick="addMorePhoto()">📷 Añadir otra foto para aclarar</button>
+  <input type="file" id="extraIn" accept="image/*" capture="environment" onchange="handleExtraPhoto(event)">
+
+  <!-- Sugerencias del catálogo -->
+  <div id="sugWrap" class="hidden">
+    <div class="lbl">¿Es alguna de estas?</div>
+    <div class="sug-row" id="sugRow"></div>
+    <div class="divider"></div>
+  </div>
+
+  <!-- ★ ENTRADA MANUAL siempre visible ★ -->
+  <div class="manual-field">
+    <div class="lbl">Nombre / código</div>
+    <input type="text" id="pieceNameIn" placeholder="Ej: FMEX_2950x600x54 o perfil L-macho 6000x100x54">
+    <div class="lbl" style="margin-top:9px">Cantidad <span style="color:var(--text3);font-weight:400">(la IA detectó: <span id="aiCountHint">—</span>)</span></div>
+    <input type="number" id="pieceCountIn" placeholder="Introduce la cantidad" min="1" step="1" style="margin-top:0">
+    <div class="lbl" style="margin-top:9px">Alias / descripción corta (opcional)</div>
+    <input type="text" id="pieceAliasIn" placeholder="panel grande ext., perfil macho…">
+  </div>
+
+  <div class="brow" style="padding:0;margin-top:4px">
+    <button class="btn btn-ghost" onclick="skipPiece()">Omitir</button>
+    <button class="btn btn-acc" onclick="confirmPiece()">Confirmar</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════
+     MODAL: NUEVA PIEZA CATÁLOGO
+══════════════════════════════ -->
+<div id="catModal" class="mbd hidden">
+<div class="modal">
+  <h3 id="catMTitle">Nueva pieza</h3>
+  <p>Define la pieza para el catálogo de reconocimiento.</p>
+
+  <div class="mtoggle" style="margin-bottom:11px">
+    <button class="mbtn active" id="ctPlaca"   onclick="setCatType('placa')">🔲 Placa fabricada</button>
+    <button class="mbtn"        id="ctPerfil"  onclick="setCatType('perfil')">🔩 Perfil en bruto</button>
+  </div>
+
+  <div class="field">
+    <div class="lbl">Código (clave única)</div>
+    <input type="text" id="cCode" placeholder="FMEX_2950x600x54 · SF_0101">
+  </div>
+  <div class="field">
+    <div class="lbl">Nombre descriptivo</div>
+    <input type="text" id="cName" placeholder="Placa encofrado muro ext.">
+  </div>
+
+  <div class="r3">
+    <div class="field">
+      <div class="lbl">H (mm)</div>
+      <input type="number" id="cH" placeholder="2950">
+    </div>
+    <div class="field">
+      <div class="lbl">A (mm)</div>
+      <input type="number" id="cA" placeholder="600">
+    </div>
+    <div class="field">
+      <div class="lbl">B (mm)</div>
+      <input type="number" id="cB" placeholder="54" value="54">
+    </div>
+  </div>
+
+  <div class="r2">
+    <div class="field">
+      <div class="lbl">Peso kg/m</div>
+      <input type="number" id="cPeso" placeholder="12.5" step="0.1">
+    </div>
+    <div class="field" id="cLargoWrap" style="display:none">
+      <div class="lbl">Largo estándar (mm)</div>
+      <input type="number" id="cLargo" placeholder="6000">
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="lbl">Alias (opcional)</div>
+    <input type="text" id="cAlias" placeholder="panel grande ext., macho 6m…">
+  </div>
+
+  <div class="field">
+    <div class="lbl">Link ficha SVG en Drive (opcional)</div>
+    <input type="text" id="cSvg" placeholder="https://drive.google.com/…">
+  </div>
+  <div class="field">
+    <div class="lbl">Link modelo 3D GLB en Drive (opcional)</div>
+    <input type="text" id="cGlb" placeholder="https://drive.google.com/…">
+  </div>
+  <div class="field">
+    <div class="lbl">Imagen referencia render (opcional — ayuda a la IA)</div>
+    <input type="file" id="cRenderIn" accept="image/*" onchange="handleRender(event)" style="display:block;color:var(--text);font-size:.75rem">
+  </div>
+  <div id="cRenderPreview" class="hidden" style="margin-bottom:10px">
+    <img id="cRenderImg" style="width:100%;max-height:90px;object-fit:cover;border-radius:6px;border:1px solid var(--border)" alt="render">
+  </div>
+
+  <div class="brow" style="padding:0">
+    <button class="btn btn-ghost" onclick="closeCatModal()">Cancelar</button>
+    <button class="btn btn-acc" onclick="saveCatItem()">Guardar</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════
+     MODAL: PLANO
+══════════════════════════════ -->
+<div id="planModal" class="mbd hidden">
+<div class="modal">
+  <h3>Plano de nave</h3>
+  <p>Imagen de fondo opcional para la cuadrícula de ubicaciones.</p>
+  <div class="field">
+    <div class="lbl">Imagen del plano</div>
+    <input type="file" id="planIn" accept="image/*" onchange="handlePlan(event)" style="display:block;color:var(--text);font-size:.75rem">
+  </div>
+  <div class="r2">
+    <div class="field"><div class="lbl">Columnas</div><input type="number" id="cfgCols" value="8" min="2" max="26"></div>
+    <div class="field"><div class="lbl">Filas</div><input type="number" id="cfgRows" value="6" min="2" max="20"></div>
+  </div>
+  <div class="brow" style="padding:0">
+    <button class="btn btn-ghost" onclick="closePlanModal()">Cancelar</button>
+    <button class="btn btn-acc" onclick="applyPlan()">Aplicar</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════
+     MODAL: LOGIN ADMIN
+══════════════════════════════ -->
+<div id="adminLoginModal" class="mbd hidden">
+<div class="modal smodal">
+  <h3>🔐 Acceso Admin</h3>
+  <p>Solo personal autorizado. Introduce la contraseña de administrador.</p>
+  <div class="field">
+    <div class="lbl">Contraseña</div>
+    <input type="password" id="adminPwIn" placeholder="••••••••" onkeydown="if(event.key==='Enter') checkAdminPw()">
+  </div>
+  <div id="adminLoginErr" class="bar bar-alert hidden" style="margin-bottom:10px">Contraseña incorrecta.</div>
+  <div class="brow" style="padding:0">
+    <button class="btn btn-ghost" onclick="closeAdminLogin()">Cancelar</button>
+    <button class="btn btn-acc" onclick="checkAdminPw()">Entrar</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════
+     PANEL: ADMIN (oculto para Marcos)
+══════════════════════════════ -->
+<div id="adminPanel" class="hidden" style="position:fixed;inset:0;background:var(--bg);z-index:900;display:flex;flex-direction:column;overflow:hidden">
+
+  <!-- Admin topbar -->
+  <div style="flex-shrink:0;height:50px;display:flex;align-items:center;padding:0 14px;background:var(--s1);border-bottom:2px solid var(--blue);gap:10px">
+    <div style="font-family:var(--display);font-size:1.1rem;font-weight:900;color:var(--blue);flex:1">
+      Admin <span style="font-size:.55rem;color:var(--text3);letter-spacing:2px;font-family:var(--mono);font-weight:400">CONFIGURACIÓN · STRONGFORMS</span>
+    </div>
+    <div id="adminDriveSt" style="font-size:.62rem"></div>
+    <button class="ibtn" onclick="closeAdmin()" title="Cerrar">✕</button>
+  </div>
+
+  <div style="flex:1;overflow-y:auto;padding:14px">
+
+    <!-- Sección: Cambiar contraseña -->
+    <div class="card">
+      <div class="card-hdr"><span class="card-hdr-lbl">🔑 Contraseña admin</span></div>
+      <div class="card-body">
+        <div class="field">
+          <div class="lbl">Contraseña actual</div>
+          <input type="password" id="pwCurrent" placeholder="••••••••">
+        </div>
+        <div class="r2">
+          <div class="field">
+            <div class="lbl">Nueva contraseña</div>
+            <input type="password" id="pwNew" placeholder="••••••••">
+          </div>
+          <div class="field">
+            <div class="lbl">Repetir nueva</div>
+            <input type="password" id="pwRepeat" placeholder="••••••••">
+          </div>
+        </div>
+        <div id="pwMsg" class="hidden" style="font-size:.7rem;margin-bottom:8px"></div>
+        <button class="btn btn-ghost" onclick="changePassword()">Cambiar contraseña</button>
+      </div>
+    </div>
+
+    <!-- Sección: API Claude -->
+    <div class="card">
+      <div class="card-hdr"><span class="card-hdr-lbl">🤖 Claude API (Anthropic)</span></div>
+      <div class="card-body">
+        <div class="field">
+          <div class="lbl">API Key</div>
+          <input type="password" id="admApiKey" placeholder="sk-ant-api03-…">
+        </div>
+        <div class="field">
+          <div class="lbl">Modelo</div>
+          <select id="admModel">
+            <option value="claude-sonnet-4-5">claude-sonnet-4-5 (recomendado · balance coste/calidad)</option>
+            <option value="claude-opus-4-5">claude-opus-4-5 (máxima precisión · más caro)</option>
+            <option value="claude-haiku-4-5">claude-haiku-4-5 (más rápido · menor coste)</option>
+          </select>
+        </div>
+        <div style="font-size:.62rem;color:var(--text3);line-height:1.7;background:var(--s2);padding:8px 10px;border-radius:6px;border:1px solid var(--border);margin-bottom:11px">
+          Coste estimado por escaneo (3 fotos 12MP comprimidas):<br>
+          Sonnet: ~0,015 € · Opus: ~0,12 € · Haiku: ~0,004 €
+        </div>
+        <button class="btn btn-acc" onclick="saveApiCfg()">Guardar API</button>
+      </div>
+    </div>
+
+    <!-- Sección: Google Drive + Sheets -->
+    <div class="card">
+      <div class="card-hdr">
+        <span class="card-hdr-lbl">☁ Google Drive · Sheets</span>
+        <span id="admGoogleSt" class="chip"></span>
+      </div>
+      <div class="card-body">
+        <div class="setup-step"><div class="sn">1</div><div class="st">Ve a <a href="https://console.cloud.google.com" target="_blank" style="color:var(--blue)">console.cloud.google.com</a> → Proyecto nuevo → Activa <strong>Drive API</strong> + <strong>Sheets API</strong>.</div></div>
+        <div class="setup-step"><div class="sn">2</div><div class="st">Credenciales → OAuth ID cliente → Tipo <strong>Aplicación web</strong>. Añade <code style="background:var(--s3);padding:1px 4px;border-radius:3px">https://laurlund.github.io</code> como origen y URI de redirección autorizados.</div></div>
+        <div class="setup-step" style="border:none"><div class="sn">3</div><div class="st">Copia el <strong>Client ID</strong> abajo y pulsa Conectar.</div></div>
+        <div class="field" style="margin-top:10px">
+          <div class="lbl">Google Client ID</div>
+          <input type="text" id="admClientId" placeholder="xxxx.apps.googleusercontent.com">
+        </div>
+        <div class="brow" style="padding:0;margin-bottom:11px">
+          <button class="btn btn-ghost" onclick="saveGoogleCfg()">Guardar Client ID</button>
+          <button class="btn btn-blue" onclick="adminDriveAuth()">🔑 Conectar Google</button>
+        </div>
+        <div style="font-size:.6rem;color:var(--text3);line-height:1.9;background:var(--s2);padding:8px 10px;border-radius:6px;border:1px solid var(--border)">
+          Sheet: <span style="color:var(--blue)">Strongforms_Inventario_BD</span><br>
+          Fotos: <span style="color:var(--blue)">98_BD_IA / FOTOS / AAAA-MM /</span><br>
+          Fichas SVG/GLB: <span style="color:var(--blue)">98_BD_IA / CATALOGO_FICHAS /</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección: Plano y grid -->
+    <div class="card">
+      <div class="card-hdr"><span class="card-hdr-lbl">🗺 Plano de nave y cuadrícula</span></div>
+      <div class="card-body">
+        <div class="field">
+          <div class="lbl">Imagen del plano</div>
+          <input type="file" id="admPlanIn" accept="image/*" onchange="handleAdminPlan(event)" style="display:block;color:var(--text);font-size:.75rem">
+        </div>
+        <div class="r2">
+          <div class="field"><div class="lbl">Columnas (A–Z)</div><input type="number" id="admCols" value="8" min="2" max="26"></div>
+          <div class="field"><div class="lbl">Filas (1–N)</div><input type="number" id="admRows" value="6" min="2" max="20"></div>
+        </div>
+        <button class="btn btn-acc" onclick="saveGridCfg()">Guardar plano / cuadrícula</button>
+      </div>
+    </div>
+
+    <!-- Sección: Almacén por defecto -->
+    <div class="card">
+      <div class="card-hdr"><span class="card-hdr-lbl">📍 Ubicación por defecto</span></div>
+      <div class="card-body">
+        <div class="r2">
+          <div class="field"><div class="lbl">Nombre almacén</div><input type="text" id="admAlm" placeholder="Rabasa"></div>
+          <div class="field"><div class="lbl">Nave</div><input type="text" id="admNave" placeholder="Nave 2"></div>
+        </div>
+        <button class="btn btn-acc" onclick="saveLocationDefaults()">Guardar</button>
+      </div>
+    </div>
+
+    <!-- Sección: Peligrosa -->
+    <div class="card" style="border-color:rgba(191,53,53,.3)">
+      <div class="card-hdr" style="background:rgba(191,53,53,.08)"><span class="card-hdr-lbl" style="color:var(--red)">⚠ Zona peligrosa</span></div>
+      <div class="card-body">
+        <div style="font-size:.72rem;color:var(--text2);margin-bottom:11px">Estas acciones son irreversibles.</div>
+        <div class="brow" style="padding:0">
+          <button class="btn btn-danger" onclick="clearHistory()">Borrar historial</button>
+          <button class="btn btn-danger" onclick="clearCatalog()">Borrar catálogo</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════ -->
+<script>
+// ── DRIVE / SHEETS IDs (hardcoded) ──
+const DRIVE_ROOT   = '1yZ1J1bjsM2oqIsEkf7IO-XS_LWGJYBUB';
+const DRIVE_FOTOS  = '1zkBtfb3eQcTwItMTcxmyuMDqsc_R7E-I';
+const DRIVE_FICHAS = '1sIKgD_BFsEgoabwhXBMzn5qOJg1e-5gl';
+const SHEET_ID     = '1mGEYiK2n9CqKBbFZCDKznE7-tYB_uZ0WTmzlz5TdmOo';
+
+// ── STATE ──
+let catalog     = JSON.parse(localStorage.getItem('sf4_cat')  || '[]');
+let history     = JSON.parse(localStorage.getItem('sf4_hist') || '[]');
+let gridCfg     = JSON.parse(localStorage.getItem('sf4_grid') || '{"cols":8,"rows":6,"planImg":null}');
+let monthFolders= JSON.parse(localStorage.getItem('sf4_mf')   || '{}');
+
+let images       = [];     // [{base64, dataUrl}]
+let currentScan  = null;
+let resolved     = [];     // piezas confirmadas
+let queue        = [];     // piezas pendientes de ID
+let current      = null;   // pieza en modal
+let scanMode     = 'normal';
+let selCell      = null;
+let oauthToken   = localStorage.getItem('sf4_token') || null;
+let pendingRender= null;
+let catType      = 'placa';
+
+// ── IMAGE RESIZE (móvil 12MP → 1024px max) ──
+const MAX_PX = 1024, IMG_Q = 0.88;
+function resize(file, cb){
+  const r = new FileReader();
+  r.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.naturalWidth, h = img.naturalHeight;
+      if(w > MAX_PX || h > MAX_PX){
+        if(w >= h){ h = Math.round(h * MAX_PX / w); w = MAX_PX; }
+        else      { w = Math.round(w * MAX_PX / h); h = MAX_PX; }
+      }
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      const ctx = c.getContext('2d');
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(img, 0, 0, w, h);
+      const url = c.toDataURL('image/jpeg', IMG_Q);
+      cb(url.split(',')[1], url);
+    };
+    img.src = ev.target.result;
+  };
+  r.readAsDataURL(file);
+}
+
+// ── TABS ──
+function switchTab(id, el){
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-' + id).classList.add('active');
+  if(id === 'cat')  renderCatalog();
+  if(id === 'hist') renderHistory();
+}
+
+// ── MODE ──
+function setMode(m){
+  scanMode = m;
+  document.getElementById('modeNorm').classList.toggle('active', m === 'normal');
+  document.getElementById('modeMix').classList.toggle('active', m === 'mixed');
+  document.getElementById('mixBar').classList.toggle('hidden', m === 'normal');
+}
+
+// ── CAPTURE ──
+function triggerCap(){ document.getElementById('fileIn').click(); }
+
+function handleFile(e){
+  const f = e.target.files[0]; if(!f) return;
+  resize(f, (b64, url) => {
+    images.push({base64: b64, dataUrl: url});
+    refreshPreview();
+    resetResult();
+  });
+  e.target.value = '';
+}
+
+function refreshPreview(){
+  if(!images.length) return;
+  const last = images[images.length - 1].dataUrl;
+  document.getElementById('prevImg').src = last;
+  document.getElementById('prevImg').classList.remove('hidden');
+  document.getElementById('capPh').classList.add('hidden');
+  document.getElementById('analyzeBtn').disabled = false;
+  renderThumbs();
+}
+
+function renderThumbs(){
+  const row = document.getElementById('thumbs');
+  if(images.length <= 1){ row.classList.add('hidden'); return; }
+  row.classList.remove('hidden');
+  row.innerHTML = images.map((img, i) => `
+    <div class="thumb">
+      <img src="${img.dataUrl}" alt="">
+      <button class="tdel" onclick="removeThumb(${i})">✕</button>
+    </div>
+  `).join('') + `<div class="tadd" onclick="triggerCap()"><span style="font-size:1.1rem">+</span><span>Foto</span></div>`;
+}
+
+function removeThumb(i){
+  images.splice(i, 1);
+  if(!images.length){
+    document.getElementById('prevImg').classList.add('hidden');
+    document.getElementById('capPh').classList.remove('hidden');
+    document.getElementById('analyzeBtn').disabled = true;
+  } else {
+    document.getElementById('prevImg').src = images[images.length - 1].dataUrl;
+  }
+  renderThumbs();
+}
+
+function resetResult(){
+  ['resultCard','confRow','noteBar','alertBar','locSection','okBar'].forEach(id => {
+    document.getElementById(id).classList.add('hidden');
+  });
+  document.getElementById('saveRow').style.display = 'none';
+}
+
+// ── ANÁLISIS ──
+async function startAnalysis(){
+  const key = getApiKey();
+  if(!key){ openAdminLogin(); return; }
+  if(!images.length) return;
+
+  setLoad(true, 'Analizando imagen…');
+  document.getElementById('analyzeBtn').disabled = true;
+  resolved = [];
+
+  // Renders del catálogo como referencia visual
+  const refBlocks = catalog
+    .filter(c => c.renderB64)
+    .slice(0, 4)
+    .map(c => ({type:'image', source:{type:'base64', media_type:'image/jpeg', data:c.renderB64}}));
+
+  const catDesc = catalog.length
+    ? 'CATÁLOGO:\n' + catalog.map(c =>
+        `• ${c.code} — "${c.name}" | Tipo:${c.type} | H:${c.h||'?'} A:${c.a||'?'} B:${c.b||'?'}mm${c.alias?' / '+c.alias:''}`
+      ).join('\n')
+    : 'CATÁLOGO VACÍO — describe cada tipo detectado con el máximo detalle.';
+
+  const mixNote = scanMode === 'mixed'
+    ? '\nMODO MIXTO: busca activamente DISTINTOS tipos en el mismo paquete. Lista cada tipo por separado aunque sea 1 unidad.'
+    : '';
+
+  const refNote = refBlocks.length
+    ? `\nIMAGENES REFERENCIA: las primeras ${refBlocks.length} imágenes son renders de catálogo. La(s) última(s) son la foto real.`
+    : '';
+
+  const system = `Eres un experto en inventario de encofrado metálico Strongforms. Cuenta piezas con precisión.
+
+${catDesc}${mixNote}${refNote}
+
+REGLAS:
+1. Confianza ≥ 95% + pieza del catálogo → known:true
+2. Cualquier duda, pieza parecida, parcialmente oculta, mala foto → known:false, confidence < 0.95
+3. Si no la reconoces → known:false, describe todo lo que ves (dimensiones visibles, forma, tipo perfil)
+4. SIEMPRE incluye dims estimadas {h,a,b} aunque sean aproximadas — ayuda al operario a confirmar
+5. El conteo es prioritario — si no estás seguro del nombre pero puedes contar, hazlo
+
+Responde SOLO JSON sin markdown:
+{"pieces":[{"label":"nombre o descripción","count":N,"known":bool,"confidence":0.0-1.0,"type":"placa|perfil","dims":{"h":null,"a":null,"b":null},"reason":"1 frase breve"}],"globalConfidence":0.0-1.0,"notes":null,"alerts":null}`;
+
+  const photoBlocks = images.map(i => ({type:'image', source:{type:'base64', media_type:'image/jpeg', data:i.base64}}));
+  const allBlocks = [...refBlocks, ...photoBlocks];
+
+  try{
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body: JSON.stringify({
+        model: getModel(),
+        max_tokens: 1200,
+        system,
+        messages: [{role:'user', content:[...allBlocks, {type:'text', text:`Analiza ${images.length} foto(s). Modo: ${scanMode}.`}]}]
+      })
+    });
+
+    setLoad(false);
+    const data = await resp.json();
+
+    if(data.error){
+      showBar('alertBar', '⚠ Error API: ' + data.error.message);
+      document.getElementById('analyzeBtn').disabled = false;
+      return;
+    }
+
+    const raw = data.content[0].text.replace(/```json|```/g,'').trim();
+    currentScan = JSON.parse(raw);
+
+    renderConf(currentScan.globalConfidence);
+    if(currentScan.notes)  showBar('noteBar',  '📝 ' + currentScan.notes);
+    if(currentScan.alerts) showBar('alertBar', '⚠ ALERTA: ' + currentScan.alerts);
+
+    // Alta confianza → directamente resueltas
+    const highConf = currentScan.pieces.filter(p => p.known && p.confidence >= 0.95);
+    // Todo lo demás → cola de confirmación manual
+    const needsId  = currentScan.pieces.filter(p => !p.known || p.confidence < 0.95);
+
+    resolved = highConf.map(p => ({
+      id: findCatId(p.label), name: p.label,
+      count: p.count, confidence: p.confidence, type: p.type
+    }));
+
+    renderResultCard(resolved);
+    queue = [...needsId];
+
+    if(queue.length) nextUnknown();
+    else showLoc();
+
+  } catch(err){
+    setLoad(false);
+    showBar('alertBar', '⚠ Error: ' + err.message);
+    document.getElementById('analyzeBtn').disabled = false;
+  }
+}
+
+function setLoad(on, msg = ''){
+  if(msg) document.getElementById('loadMsg').textContent = msg;
+  document.getElementById('loadOv').classList.toggle('hidden', !on);
+}
+
+function renderConf(val){
+  const pct = Math.round(val * 100);
+  const fill = document.getElementById('confFill');
+  fill.style.width = pct + '%';
+  fill.style.background = pct >= 95 ? 'var(--green)' : pct >= 70 ? 'var(--yellow)' : 'var(--red)';
+  document.getElementById('confLbl').textContent = 'Confianza IA: ' + pct + '%';
+  document.getElementById('confRow').classList.remove('hidden');
+}
+
+function showBar(id, msg){
+  const el = document.getElementById(id);
+  el.innerHTML = msg; el.classList.remove('hidden');
+}
+
+function renderResultCard(pieces){
+  const body = document.getElementById('resultBody');
+  let total = 0;
+  body.innerHTML = pieces.map(p => {
+    total += p.count;
+    const cat = catalog.find(c => c.id === p.id) || {};
+    const ico = cat.emoji || guessEmoji(p.name, p.type);
+    const pct = Math.round((p.confidence || 1) * 100);
+    const col = pct >= 95 ? 'var(--green)' : pct >= 70 ? 'var(--yellow)' : 'var(--red)';
+    return `<div class="piece-row">
+      <span class="piece-ico">${ico}</span>
+      <div class="piece-info">
+        <div class="piece-name">${p.name}</div>
+        <div class="piece-conf" style="color:${col}">confianza ${pct}%</div>
+      </div>
+      <span class="piece-count">${p.count}</span>
+      <span class="piece-unit"> ud.</span>
+    </div>`;
+  }).join('');
+  document.getElementById('totalCount').textContent = total;
+
+  const gc = currentScan?.globalConfidence || 0;
+  const chip = document.getElementById('resultChip');
+  if(gc >= 0.95){ chip.className = 'chip chip-ok'; chip.textContent = '✓ Alta confianza'; }
+  else if(gc >= 0.7){ chip.className = 'chip chip-warn'; chip.textContent = '⚠ Revisar'; }
+  else { chip.className = 'chip chip-err'; chip.textContent = '✕ Confirmar manual'; }
+
+  document.getElementById('resultCard').classList.remove('hidden');
+}
+
+function showLoc(){
+  document.getElementById('locSection').classList.remove('hidden');
+  document.getElementById('saveRow').style.display = 'flex';
+  buildGrid();
+}
+
+// ── IDENTIFICACIÓN ──
+function nextUnknown(){
+  if(!queue.length){ renderResultCard(resolved); showLoc(); return; }
+  current = queue.shift();
+  openIdentModal(current);
+}
+
+function openIdentModal(item){
+  const pct = Math.round((item.confidence || 0) * 100);
+  const isKnown = item.known;
+
+  document.getElementById('identTitle').textContent =
+    isKnown ? '⚠ Confirmar — duda de la IA' : '❓ Pieza no reconocida';
+
+  // Descripción con dimensiones estimadas si las hay
+  const dims = item.dims;
+  const dimsStr = dims && (dims.h || dims.a || dims.b)
+    ? ` Dimensiones estimadas: H${dims.h||'?'} × A${dims.a||'?'} × B${dims.b||'?'}mm.`
+    : '';
+
+  document.getElementById('identDesc').textContent = isKnown
+    ? `La IA cree que es "${item.label}" pero solo con ${pct}% de confianza. ${item.reason || ''}${dimsStr} ¿Es correcto o lo corriges?`
+    : `La IA no reconoce esta pieza con seguridad (${pct}%). ${item.reason || ''}${dimsStr} ¿Cómo se llama?`;
+
+  // Fotos
+  document.getElementById('identImgs').innerHTML =
+    images.map(i => `<img class="modal-img" src="${i.dataUrl}">`).join('');
+
+  // Chip confianza
+  const chip = document.getElementById('identConf');
+  const cls = pct >= 95 ? 'chip-ok' : pct >= 70 ? 'chip-warn' : 'chip-err';
+  chip.className = 'chip ' + cls;
+  chip.textContent = `IA: ${pct}% — ${item.reason || '—'}`;
+
+  // Sugerencias catálogo
+  const sugW = document.getElementById('sugWrap');
+  if(catalog.length){
+    sugW.classList.remove('hidden');
+    document.getElementById('sugRow').innerHTML =
+      catalog.slice(0, 6).map(c =>
+        `<button class="sug-btn" onclick="selectSug('${(c.code||c.name).replace(/'/g,"\\'")}',this)">${c.emoji||'🔲'} ${c.code||c.name}</button>`
+      ).join('');
+  } else sugW.classList.add('hidden');
+
+  // ★ Pre-rellenar campos manuales con lo que dijo la IA
+  document.getElementById('pieceNameIn').value = item.label;
+  document.getElementById('pieceCountIn').value = item.count;
+  document.getElementById('aiCountHint').textContent = item.count;
+  document.getElementById('pieceAliasIn').value = '';
+
+  document.getElementById('identModal').classList.remove('hidden');
+  setTimeout(() => document.getElementById('pieceNameIn').focus(), 150);
+}
+
+function selectSug(name, el){
+  document.querySelectorAll('.sug-btn').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('pieceNameIn').value = name;
+}
+
+function confirmPiece(){
+  const name  = document.getElementById('pieceNameIn').value.trim(); if(!name) return;
+  const count = parseInt(document.getElementById('pieceCountIn').value) || current.count;
+  const alias = document.getElementById('pieceAliasIn').value.trim();
+
+  let id = findCatId(name);
+  if(!id){
+    id = 'c_' + Date.now();
+    const newItem = {
+      id, code: name, name, alias,
+      type: current.type || 'placa',
+      emoji: guessEmoji(name, current.type),
+      h: current.dims?.h || null,
+      a: current.dims?.a || null,
+      b: current.dims?.b || null,
+      totalScanned: 0,
+      renderB64: null
+    };
+    catalog.push(newItem);
+    saveCatalog();
+  }
+
+  resolved.push({id, name, count, confidence: 1.0, type: current.type});
+  document.getElementById('identModal').classList.add('hidden');
+  current = null;
+  nextUnknown();
+}
+
+function skipPiece(){
+  // Aún en modo skip, usamos la cantidad que el usuario haya escrito
+  const count = parseInt(document.getElementById('pieceCountIn').value) || current.count;
+  resolved.push({id: null, name: current.label + ' ⚠', count, confidence: current.confidence});
+  document.getElementById('identModal').classList.add('hidden');
+  current = null;
+  nextUnknown();
+}
+
+function addMorePhoto(){ document.getElementById('extraIn').click(); }
+function handleExtraPhoto(e){
+  const f = e.target.files[0]; if(!f) return;
+  resize(f, (b64, url) => {
+    images.push({base64: b64, dataUrl: url});
+    renderThumbs();
+    document.getElementById('identModal').classList.add('hidden');
+    queue = []; resolved = []; current = null;
+    startAnalysis();
+  });
+  e.target.value = '';
+}
+
+// ── GRID ──
+function buildGrid(){
+  const cols = gridCfg.cols || 8, rows = gridCfg.rows || 6;
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.slice(0, cols);
+  const ovl = document.getElementById('govl');
+  ovl.style.gridTemplateColumns = `repeat(${cols},1fr)`;
+  ovl.style.gridTemplateRows    = `repeat(${rows},1fr)`;
+  ovl.innerHTML = '';
+
+  document.getElementById('colLbls').innerHTML =
+    '<div style="width:16px;flex-shrink:0"></div>' +
+    letters.split('').map(l => `<div class="col-lbl">${l}</div>`).join('');
+
+  const rl = document.getElementById('rowLbls'); rl.innerHTML = '';
+  for(let r = 1; r <= rows; r++){
+    const d = document.createElement('div');
+    d.className = 'row-lbl'; d.textContent = r; rl.appendChild(d);
+  }
+
+  for(let r = 1; r <= rows; r++){
+    for(let c = 0; c < cols; c++){
+      const l = letters[c], coord = l + r;
+      const cell = document.createElement('div');
+      cell.className = 'gcell';
+      cell.dataset.col = l; cell.dataset.row = r;
+      cell.innerHTML = `<span class="gcell-l">${coord}</span>`;
+      if(history.some(h => h.location?.zona === coord)) cell.classList.add('occ');
+      cell.addEventListener('click', () => selectCell(l, r, cell));
+      ovl.appendChild(cell);
+    }
+  }
+
+  if(gridCfg.planImg){
+    document.getElementById('planBg').src = gridCfg.planImg;
+    document.getElementById('planBg').classList.remove('hidden');
+  }
+
+  if(selCell){
+    const ex = ovl.querySelector(`[data-col="${selCell.col}"][data-row="${selCell.row}"]`);
+    if(ex) ex.classList.add('sel');
+  }
+}
+
+function selectCell(col, row, el){
+  document.querySelectorAll('.gcell.sel').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel'); selCell = {col, row};
+  document.getElementById('zonaIn').value = col + row;
+  document.getElementById('selLbl').textContent = col + row;
+  updateBC();
+}
+
+function syncZona(){
+  const v = document.getElementById('zonaIn').value.trim().toUpperCase();
+  const m = v.match(/^([A-Z])(\d+)$/);
+  if(m){
+    const cell = document.querySelector(`[data-col="${m[1]}"][data-row="${m[2]}"]`);
+    if(cell){
+      document.querySelectorAll('.gcell.sel').forEach(c => c.classList.remove('sel'));
+      cell.classList.add('sel');
+      selCell = {col: m[1], row: parseInt(m[2])};
+      document.getElementById('selLbl').textContent = v;
+    }
+  }
+  updateBC();
+}
+
+function updateBC(){
+  const alm  = document.getElementById('locAlm').value.trim()  || '—';
+  const nave  = document.getElementById('locNave').value.trim() || '—';
+  const zona  = document.getElementById('zonaIn').value.trim().toUpperCase() || '—';
+  document.getElementById('bc').innerHTML = `
+    <span class="bc-item">${alm}</span>
+    <span class="bc-sep">›</span>
+    <span class="bc-item">${nave}</span>
+    <span class="bc-sep">›</span>
+    <span class="bc-item">${zona}</span>`;
+}
+
+function openPlanModal(){ document.getElementById('planModal').classList.remove('hidden'); }
+function closePlanModal(){ document.getElementById('planModal').classList.add('hidden'); }
+let pendingPlan = null;
+function handlePlan(e){ const f = e.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = ev => pendingPlan = ev.target.result; r.readAsDataURL(f); e.target.value = ''; }
+function applyPlan(){
+  gridCfg = {cols: parseInt(document.getElementById('cfgCols').value)||8, rows: parseInt(document.getElementById('cfgRows').value)||6, planImg: pendingPlan || gridCfg.planImg};
+  localStorage.setItem('sf4_grid', JSON.stringify(gridCfg));
+  closePlanModal(); buildGrid();
+}
+
+// ── GUARDAR REGISTRO ──
+async function saveRecord(){
+  const alm  = document.getElementById('locAlm').value.trim();
+  const nave  = document.getElementById('locNave').value.trim();
+  const zona  = document.getElementById('zonaIn').value.trim().toUpperCase();
+  const obs   = document.getElementById('obsIn').value.trim();
+  const total = resolved.reduce((s, p) => s + p.count, 0);
+  const dateStr = new Date().toISOString().slice(0, 10);
+  const id = 'r_' + Date.now();
+
+  // Actualizar totalScanned en catálogo
+  resolved.forEach(p => {
+    if(p.id){ const c = catalog.find(x => x.id === p.id); if(c) c.totalScanned = (c.totalScanned || 0) + p.count; }
+  });
+  saveCatalog();
+
+  const entry = {
+    id, date: new Date().toLocaleString('es-ES'), dateISO: new Date().toISOString(),
+    location: {almacen: alm, nave, zona, obs},
+    pieces: resolved, total,
+    photoDataUrls: images.map(i => i.dataUrl),
+    driveFiles: [], sheetSynced: false
+  };
+
+  // Upload fotos a Drive
+  if(oauthToken && images.length){
+    setLoad(true, 'Subiendo fotos a Drive…');
+    const folderId = await getMonthFolder(dateStr.slice(0, 7));
+    for(let i = 0; i < images.length; i++){
+      const img = images[i];
+      const zonaSafe = (zona || 'SZ').replace(/[^A-Z0-9]/gi, '');
+      const pStr = resolved.map(p => (p.name||'').replace(/[^a-zA-Z0-9_-]/g,'')).join('-').slice(0, 28);
+      const fname = `${dateStr}_${(nave||'N').replace(/\s/g,'')}_${zonaSafe}_${pStr}_${String(i+1).padStart(2,'0')}.jpg`;
+      const fid = await uploadPhoto(img.base64, fname, folderId);
+      if(fid) entry.driveFiles.push({id: fid, url: `https://drive.google.com/file/d/${fid}/view`, name: fname});
+    }
+    setLoad(false);
+  }
+
+  // Escribir en Sheets
+  if(oauthToken){
+    setLoad(true, 'Guardando en Sheets…');
+    await appendInventario(entry);
+    entry.sheetSynced = true;
+    setLoad(false);
+  }
+
+  history.unshift(entry);
+  saveHistory();
+
+  document.getElementById('saveRow').style.display = 'none';
+  const ok = document.getElementById('okBar');
+  const driveInfo = entry.driveFiles.length ? ` · ${entry.driveFiles.length} foto(s) en Drive` : '';
+  const sheetInfo = entry.sheetSynced ? ' · Sheets ✓' : '';
+  ok.textContent = `✅ Guardado${driveInfo}${sheetInfo} — ${zona || 'sin zona'}`;
+  ok.classList.remove('hidden');
+  buildGrid();
+}
+
+// ── DRIVE API ──
+async function getMonthFolder(monthKey){
+  if(monthFolders[monthKey]) return monthFolders[monthKey];
+  try{
+    const q = encodeURIComponent(`name="${monthKey}" and '${DRIVE_FOTOS}' in parents and trashed=false`);
+    const r = await fetch(`https://www.googleapis.com/drive/v3/files?q=${q}`, {headers:{Authorization:'Bearer '+oauthToken}});
+    const d = await r.json();
+    if(d.files?.length){ monthFolders[monthKey] = d.files[0].id; localStorage.setItem('sf4_mf', JSON.stringify(monthFolders)); return d.files[0].id; }
+    const cr = await fetch('https://www.googleapis.com/drive/v3/files', {
+      method:'POST', headers:{Authorization:'Bearer '+oauthToken,'Content-Type':'application/json'},
+      body: JSON.stringify({name: monthKey, mimeType:'application/vnd.google-apps.folder', parents:[DRIVE_FOTOS]})
+    });
+    const cd = await cr.json();
+    monthFolders[monthKey] = cd.id; localStorage.setItem('sf4_mf', JSON.stringify(monthFolders));
+    return cd.id;
+  } catch{ return DRIVE_FOTOS; }
+}
+
+async function uploadPhoto(b64, filename, folderId){
+  try{
+    const bnd = 'SF_' + Date.now();
+    const meta = JSON.stringify({name: filename, parents:[folderId]});
+    const body = `--${bnd}\r\nContent-Type:application/json;charset=UTF-8\r\n\r\n${meta}\r\n--${bnd}\r\nContent-Type:image/jpeg\r\nContent-Transfer-Encoding:base64\r\n\r\n${b64}\r\n--${bnd}--`;
+    const r = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+      method:'POST', headers:{Authorization:'Bearer '+oauthToken,'Content-Type':`multipart/related;boundary="${bnd}"`}, body
+    });
+    const d = await r.json(); return d.id || null;
+  } catch{ return null; }
+}
+
+// ── SHEETS API ──
+async function appendInventario(entry){
+  const photoLink = entry.driveFiles.map(f => f.url).join(' | ');
+  const rows = entry.pieces.map(p => [
+    entry.id, entry.dateISO,
+    entry.location.almacen || '', entry.location.nave || '', entry.location.zona || '',
+    p.name, p.count, Math.round((p.confidence || 1) * 100) + '%',
+    p.type || '', entry.location.obs || '',
+    photoLink, entry.driveFiles[0]?.url || ''
+  ]);
+  try{
+    await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/INVENTARIO!A:L:append?valueInputOption=USER_ENTERED`, {
+      method:'POST', headers:{Authorization:'Bearer '+oauthToken,'Content-Type':'application/json'},
+      body: JSON.stringify({values: rows})
+    });
+  } catch{}
+}
+
+// Inicializar cabeceras del Sheet la primera vez
+async function ensureSheetHeaders(){
+  if(!oauthToken) return;
+  const hdrs = [['ID_Registro','Fecha','Almacén','Nave','Zona','Pieza_Código','Cantidad','Confianza_IA','Tipo','Observaciones','Links_Fotos','Link_Foto_Principal']];
+  try{
+    await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/INVENTARIO!A1:append?valueInputOption=USER_ENTERED`, {
+      method:'POST', headers:{Authorization:'Bearer '+oauthToken,'Content-Type':'application/json'},
+      body: JSON.stringify({values: hdrs})
+    });
+  } catch{}
+}
+
+// ── CATÁLOGO ──
+function setCatType(t){
+  catType = t;
+  document.getElementById('ctPlaca').classList.toggle('active', t === 'placa');
+  document.getElementById('ctPerfil').classList.toggle('active', t === 'perfil');
+  document.getElementById('cLargoWrap').style.display = t === 'perfil' ? 'block' : 'none';
+}
+
+function openCatModal(){
+  document.getElementById('cCode').value = '';
+  document.getElementById('cName').value = '';
+  document.getElementById('cH').value = '';
+  document.getElementById('cA').value = '';
+  document.getElementById('cB').value = 54;
+  document.getElementById('cPeso').value = '';
+  document.getElementById('cLargo').value = 6000;
+  document.getElementById('cAlias').value = '';
+  document.getElementById('cSvg').value = '';
+  document.getElementById('cGlb').value = '';
+  document.getElementById('cRenderPreview').classList.add('hidden');
+  pendingRender = null;
+  setCatType('placa');
+  document.getElementById('catModal').classList.remove('hidden');
+}
+function closeCatModal(){ document.getElementById('catModal').classList.add('hidden'); pendingRender = null; }
+
+function handleRender(e){
+  const f = e.target.files[0]; if(!f) return;
+  resize(f, (b64, url) => {
+    pendingRender = b64;
+    document.getElementById('cRenderImg').src = url;
+    document.getElementById('cRenderPreview').classList.remove('hidden');
+  });
+  e.target.value = '';
+}
+
+function saveCatItem(){
+  const code = document.getElementById('cCode').value.trim(); if(!code) return;
+  const name = document.getElementById('cName').value.trim() || code;
+  const type = catType === 'perfil' ? 'perfil' : 'placa';
+  const item = {
+    id: 'c_' + Date.now(),
+    code, name, type,
+    h: parseInt(document.getElementById('cH').value) || null,
+    a: parseInt(document.getElementById('cA').value) || null,
+    b: parseInt(document.getElementById('cB').value) || 54,
+    peso: parseFloat(document.getElementById('cPeso').value) || null,
+    largo: parseInt(document.getElementById('cLargo').value) || 6000,
+    alias: document.getElementById('cAlias').value.trim(),
+    svgUrl: document.getElementById('cSvg').value.trim(),
+    glbUrl: document.getElementById('cGlb').value.trim(),
+    emoji: guessEmoji(name, type),
+    totalScanned: 0,
+    renderB64: pendingRender || null
+  };
+  const existing = catalog.findIndex(c => c.code === code);
+  if(existing >= 0) catalog[existing] = {...catalog[existing], ...item, id: catalog[existing].id};
+  else catalog.push(item);
+  saveCatalog();
+  pendingRender = null;
+  closeCatModal(); renderCatalog();
+}
+
+function renderCatalog(){
+  const placas   = catalog.filter(c => c.type !== 'perfil');
+  const perfiles = catalog.filter(c => c.type === 'perfil');
+
+  const renderItem = c => `
+    <div class="cat-item">
+      <div class="cat-ico">${c.emoji || '🔲'}</div>
+      <div class="cat-inf">
+        <div class="cat-code">${c.code || c.name}</div>
+        <div class="cat-name">${c.name}</div>
+        <div class="cat-dims">${[c.h, c.a, c.b].filter(Boolean).join('×')}${c.h?'mm':''} ${c.alias?'· '+c.alias:''}</div>
+      </div>
+      <div class="cat-stat">
+        <div class="cat-n">${c.totalScanned || 0}</div>
+        <div class="cat-l">escaneadas</div>
+      </div>
+      ${c.svgUrl ? `<a href="${c.svgUrl}" target="_blank" class="ibtn" style="width:24px;height:24px;font-size:.65rem" title="SVG">📐</a>` : ''}
+      ${c.glbUrl ? `<a href="${c.glbUrl}" target="_blank" class="ibtn" style="width:24px;height:24px;font-size:.65rem" title="3D">🧊</a>` : ''}
+      <button class="del-btn" onclick="deleteCat('${c.id}')">✕</button>
+    </div>`;
+
+  document.getElementById('catPiezas').innerHTML   = placas.length   ? placas.map(renderItem).join('')   : '<div class="empty" style="padding:14px 0">Sin placas.</div>';
+  document.getElementById('catPerfiles').innerHTML = perfiles.length ? perfiles.map(renderItem).join('') : '<div class="empty" style="padding:14px 0">Sin perfiles.</div>';
+}
+
+function deleteCat(id){
+  const c = catalog.find(x => x.id === id);
+  if(!confirm(`¿Eliminar "${c?.code || id}"?`)) return;
+  catalog = catalog.filter(x => x.id !== id);
+  saveCatalog(); renderCatalog();
+}
+
+// ── HISTORIAL ──
+function renderHistory(){
+  const list = document.getElementById('histList');
+  if(!history.length){ list.innerHTML = '<div class="empty">Sin escaneos guardados.</div>'; return; }
+  let totalU = 0; history.forEach(e => totalU += e.total || 0);
+  document.getElementById('kpiScans').textContent = history.length;
+  document.getElementById('kpiUds').textContent = totalU;
+  list.innerHTML = history.map(e => {
+    const loc = [e.location?.almacen, e.location?.nave, e.location?.zona].filter(Boolean).join(' › ');
+    return `<div class="hist-item">
+      <div class="hist-hdr">
+        <span class="hist-date">${e.date}</span>
+        ${loc ? `<span class="hist-loc">📍 ${loc}</span>` : ''}
+        <span class="hist-total">${e.total} ud.</span>
+      </div>
+      <div class="hist-body">
+        ${e.photoDataUrls?.length ? `<img class="hist-thumb" src="${e.photoDataUrls[0]}" alt="foto">` : ''}
+        ${e.pieces.map(p => `<div class="hist-pr"><span>${p.name}</span><span>${p.count} ud.</span></div>`).join('')}
+        ${e.location?.obs ? `<div style="font-size:.65rem;color:var(--text3);margin-top:4px">💬 ${e.location.obs}</div>` : ''}
+        ${(e.driveFiles || []).map(f => `<a class="hist-link" href="${f.url}" target="_blank">📎 ${f.name}</a>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function exportCSV(){
+  const rows = [['Fecha','Almacén','Nave','Zona','Código_Pieza','Cantidad','Confianza','Tipo','Observaciones','Link_Foto']];
+  history.forEach(e => e.pieces.forEach(p => rows.push([
+    e.date, e.location?.almacen || '', e.location?.nave || '', e.location?.zona || '',
+    p.name, p.count, p.confidence != null ? Math.round(p.confidence * 100) + '%' : '',
+    p.type || '', e.location?.obs || '', (e.driveFiles || [])[0]?.url || ''
+  ])));
+  const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\uFEFF' + csv], {type:'text/csv;charset=utf-8'}));
+  a.download = 'strongforms_inventario_' + new Date().toISOString().slice(0, 10) + '.csv';
+  a.click();
+}
+
+// ═══════════════════════════════════════════════════
+//  SISTEMA ADMIN — contraseña requerida
+//  Acceso: ?admin en URL  O  toque largo 5s en logo
+//  Las credenciales NUNCA se exponen al usuario normal
+// ═══════════════════════════════════════════════════
+
+// Contraseña por defecto la primera vez (obligar cambio)
+const DEFAULT_PW = 'strongforms2024';
+
+// Hash simple (no criptográfico pero suficiente para uso interno)
+async function hashPw(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+// Cifrado XOR básico con contraseña como clave (ofusca las keys en localStorage)
+function xorCipher(text, key){
+  let out = '';
+  for(let i = 0; i < text.length; i++){
+    out += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+  }
+  return btoa(out);
+}
+function xorDecipher(enc, key){
+  try{
+    const raw = atob(enc);
+    let out = '';
+    for(let i = 0; i < raw.length; i++){
+      out += String.fromCharCode(raw.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+    }
+    return out;
+  } catch{ return ''; }
+}
+
+// Leer/escribir credenciales cifradas
+function getCred(name){ return xorDecipher(localStorage.getItem('sf4_c_'+name) || '', 'SF_SALT_2024'); }
+function setCred(name, val){ localStorage.setItem('sf4_c_'+name, xorCipher(val, 'SF_SALT_2024')); }
+
+// Obtener API key para uso en startAnalysis
+function getApiKey(){ return getCred('apikey'); }
+function getModel()  { return localStorage.getItem('sf4_model') || 'claude-sonnet-4-5'; }
+
+// Estado admin
+let adminAuthenticated = false;
+let adminHoldTimer = null;
+
+// ── TOQUE LARGO en logo (5 segundos) ──
+function startAdminHold(){
+  adminHoldTimer = setTimeout(() => openAdminLogin(), 5000);
+}
+function cancelAdminHold(){
+  if(adminHoldTimer){ clearTimeout(adminHoldTimer); adminHoldTimer = null; }
+}
+
+// ── ACCESO POR URL ?admin ──
+if(location.search.includes('admin') || location.hash.includes('admin')){
+  setTimeout(() => openAdminLogin(), 300);
+}
+
+// ── LOGIN ADMIN ──
+function openAdminLogin(){
+  document.getElementById('adminPwIn').value = '';
+  document.getElementById('adminLoginErr').classList.add('hidden');
+  document.getElementById('adminLoginModal').classList.remove('hidden');
+  setTimeout(() => document.getElementById('adminPwIn').focus(), 150);
+}
+function closeAdminLogin(){
+  document.getElementById('adminLoginModal').classList.add('hidden');
+}
+
+async function checkAdminPw(){
+  const entered = document.getElementById('adminPwIn').value;
+  const storedHash = localStorage.getItem('sf4_pwhash');
+
+  let valid = false;
+  if(!storedHash){
+    // Primera vez — contraseña por defecto
+    valid = (entered === DEFAULT_PW);
+    if(valid){
+      const h = await hashPw(DEFAULT_PW);
+      localStorage.setItem('sf4_pwhash', h);
+    }
+  } else {
+    const enteredHash = await hashPw(entered);
+    valid = (enteredHash === storedHash);
+  }
+
+  if(valid){
+    adminAuthenticated = true;
+    closeAdminLogin();
+    openAdmin();
+  } else {
+    document.getElementById('adminLoginErr').classList.remove('hidden');
+    document.getElementById('adminPwIn').value = '';
+    document.getElementById('adminPwIn').focus();
+  }
+}
+
+// ── PANEL ADMIN ──
+function openAdmin(){
+  if(!adminAuthenticated){ openAdminLogin(); return; }
+
+  // Rellenar campos con valores actuales
+  document.getElementById('admApiKey').value   = getCred('apikey');
+  document.getElementById('admModel').value    = getModel();
+  document.getElementById('admClientId').value = getCred('clientid');
+  document.getElementById('admCols').value     = gridCfg.cols || 8;
+  document.getElementById('admRows').value     = gridCfg.rows || 6;
+  const locDef = JSON.parse(localStorage.getItem('sf4_locdef') || '{}');
+  document.getElementById('admAlm').value  = locDef.alm  || '';
+  document.getElementById('admNave').value = locDef.nave || '';
+
+  // Mostrar estado Google
+  updateAdminDriveUI();
+
+  document.getElementById('adminPanel').style.display = 'flex';
+  // Limpiar URL si vino por ?admin
+  if(location.search.includes('admin')) history.replaceState(null,'', location.pathname + location.hash.replace('#admin',''));
+}
+
+function closeAdmin(){
+  document.getElementById('adminPanel').style.display = 'none';
+  adminAuthenticated = false; // requiere nueva autenticación cada vez
+}
+
+// ── CAMBIO CONTRASEÑA ──
+async function changePassword(){
+  const cur    = document.getElementById('pwCurrent').value;
+  const nw     = document.getElementById('pwNew').value;
+  const rep    = document.getElementById('pwRepeat').value;
+  const msg    = document.getElementById('pwMsg');
+
+  const storedHash = localStorage.getItem('sf4_pwhash');
+  const curHash    = await hashPw(cur);
+  const isDefault  = !storedHash && cur === DEFAULT_PW;
+
+  if(!isDefault && curHash !== storedHash){
+    msg.textContent = '✕ Contraseña actual incorrecta.';
+    msg.style.color = 'var(--red)';
+    msg.classList.remove('hidden'); return;
+  }
+  if(nw.length < 6){
+    msg.textContent = '✕ La nueva contraseña debe tener al menos 6 caracteres.';
+    msg.style.color = 'var(--red)';
+    msg.classList.remove('hidden'); return;
+  }
+  if(nw !== rep){
+    msg.textContent = '✕ Las contraseñas no coinciden.';
+    msg.style.color = 'var(--red)';
+    msg.classList.remove('hidden'); return;
+  }
+  const newHash = await hashPw(nw);
+  localStorage.setItem('sf4_pwhash', newHash);
+  msg.textContent = '✓ Contraseña cambiada correctamente.';
+  msg.style.color = 'var(--green)';
+  msg.classList.remove('hidden');
+  document.getElementById('pwCurrent').value = '';
+  document.getElementById('pwNew').value = '';
+  document.getElementById('pwRepeat').value = '';
+}
+
+// ── GUARDAR API CLAUDE ──
+function saveApiCfg(){
+  const key   = document.getElementById('admApiKey').value.trim();
+  const model = document.getElementById('admModel').value;
+  setCred('apikey', key);
+  localStorage.setItem('sf4_model', model);
+  showAdminToast('✓ API Key y modelo guardados');
+}
+
+// ── GUARDAR GOOGLE CLIENT ID ──
+function saveGoogleCfg(){
+  const cid = document.getElementById('admClientId').value.trim();
+  setCred('clientid', cid);
+  showAdminToast('✓ Client ID guardado');
+}
+
+// ── AUTH GOOGLE DESDE ADMIN ──
+function adminDriveAuth(){
+  const cid = document.getElementById('admClientId').value.trim() || getCred('clientid');
+  if(!cid){ showAdminToast('✕ Introduce primero el Client ID'); return; }
+  const scope = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets';
+  const redir = encodeURIComponent(location.origin + location.pathname);
+  const url   = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${cid}&redirect_uri=${redir}&response_type=token&scope=${encodeURIComponent(scope)}&prompt=consent`;
+  window.open(url, '_blank', 'width=520,height=620');
+  window._driveAuthCb = token => {
+    oauthToken = token;
+    localStorage.setItem('sf4_token', token);
+    updateAdminDriveUI();
+    updateDriveUI();
+    ensureSheetHeaders();
+    showAdminToast('✓ Google conectado correctamente');
+  };
+}
+
+function updateAdminDriveUI(){
+  const st = document.getElementById('admGoogleSt');
+  const topSt = document.getElementById('adminDriveSt');
+  if(oauthToken){
+    st.className = 'chip chip-ok'; st.textContent = '✓ Conectado';
+    if(topSt) topSt.innerHTML = '<span class="chip chip-ok" style="font-size:.6rem">Drive ✓</span>';
+  } else {
+    st.className = 'chip chip-err'; st.textContent = '✕ Sin conectar';
+    if(topSt) topSt.innerHTML = '';
+  }
+}
+
+// ── PLANO Y GRID DESDE ADMIN ──
+let adminPendingPlan = null;
+function handleAdminPlan(e){
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ev => adminPendingPlan = ev.target.result;
+  r.readAsDataURL(f); e.target.value = '';
+}
+function saveGridCfg(){
+  gridCfg = {
+    cols: parseInt(document.getElementById('admCols').value) || 8,
+    rows: parseInt(document.getElementById('admRows').value) || 6,
+    planImg: adminPendingPlan || gridCfg.planImg
+  };
+  localStorage.setItem('sf4_grid', JSON.stringify(gridCfg));
+  buildGrid();
+  showAdminToast('✓ Cuadrícula / plano guardados');
+}
+
+// ── UBICACIÓN POR DEFECTO ──
+function saveLocationDefaults(){
+  const alm  = document.getElementById('admAlm').value.trim();
+  const nave = document.getElementById('admNave').value.trim();
+  localStorage.setItem('sf4_locdef', JSON.stringify({alm, nave}));
+  // Aplicar en campos del scan si están vacíos
+  if(!document.getElementById('locAlm').value) document.getElementById('locAlm').value = alm;
+  if(!document.getElementById('locNave').value) document.getElementById('locNave').value = nave;
+  showAdminToast('✓ Ubicación por defecto guardada');
+}
+
+// ── ZONA PELIGROSA ──
+function clearHistory(){
+  if(!confirm('¿Borrar todo el historial de escaneos? Irreversible.')) return;
+  history = []; saveHistory();
+  showAdminToast('Historial borrado');
+}
+function clearCatalog(){
+  if(!confirm('¿Borrar todo el catálogo de piezas? Irreversible.')) return;
+  catalog = []; saveCatalog();
+  showAdminToast('Catálogo borrado');
+}
+
+// ── TOAST ADMIN ──
+function showAdminToast(msg){
+  let t = document.getElementById('adminToast');
+  if(!t){ t = document.createElement('div'); t.id='adminToast'; t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--s3);border:1px solid var(--border2);color:var(--text);padding:9px 18px;border-radius:20px;font-size:.72rem;z-index:9999;letter-spacing:.5px;transition:opacity .3s'; document.body.appendChild(t); }
+  t.textContent = msg; t.style.opacity = '1';
+  clearTimeout(t._to); t._to = setTimeout(() => t.style.opacity = '0', 2500);
+}
+
+// ── updateDriveUI (pill en topbar — solo visible si hay token) ──
+function updateDriveUI(){
+  const pill = document.getElementById('drivePill');
+  if(oauthToken) pill.classList.remove('hidden');
+  else pill.classList.add('hidden');
+}
+
+// ── openSettings stub (ya no se usa pero evita errores si quedó alguna referencia) ──
+function openSettings(){ openAdminLogin(); }
+function closeSettings(){ closeAdminLogin(); }
+function saveSettings(){}
+
+// Parsear token del hash tras redirect OAuth
+if(location.hash.includes('access_token')){
+  const p = new URLSearchParams(location.hash.slice(1));
+  const t = p.get('access_token');
+  if(t){
+    oauthToken = t; localStorage.setItem('sf4_token', t);
+    if(window.opener?._driveAuthCb){ window.opener._driveAuthCb(t); window.close(); }
+    else updateDriveUI();
+  }
+}
+
+// ── RESET ──
+function resetScan(){
+  images = []; resolved = []; queue = []; current = null; currentScan = null; selCell = null;
+  document.getElementById('prevImg').classList.add('hidden');
+  document.getElementById('prevImg').src = '';
+  document.getElementById('capPh').classList.remove('hidden');
+  document.getElementById('analyzeBtn').disabled = true;
+  document.getElementById('thumbs').classList.add('hidden');
+  document.getElementById('thumbs').innerHTML = '';
+  resetResult();
+  ['locAlm','locNave','zonaIn','obsIn'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('bc').innerHTML = '<span style="color:var(--text3);font-size:.7rem">Sin seleccionar</span>';
+  document.getElementById('selLbl').textContent = '';
+}
+
+// ── HELPERS ──
+function findCatId(name){
+  return catalog.find(c =>
+    c.code === name || c.name === name ||
+    (c.alias && c.alias.toLowerCase() === name.toLowerCase())
+  )?.id || null;
+}
+
+function guessEmoji(name, type){
+  if(type === 'perfil') return '🔩';
+  const n = (name || '').toLowerCase();
+  if(n.includes('fmex') || n.includes('panel') || n.includes('placa')) return '🔲';
+  if(n.includes('viga') || n.includes('jácena')) return '📏';
+  if(n.includes('puntal') || n.includes('sopanda')) return '🏗️';
+  if(n.includes('esquina') || n.includes('ángulo')) return '📐';
+  if(n.includes('pasador') || n.includes('clamp') || n.includes('tornillo')) return '🔩';
+  return '🟫';
+}
+
+function saveCatalog(){ localStorage.setItem('sf4_cat',  JSON.stringify(catalog)); }
+function saveHistory() { localStorage.setItem('sf4_hist', JSON.stringify(history)); }
+
+// ── INIT ──
+updateDriveUI();
+buildGrid();
+// Cargar ubicación por defecto configurada por admin
+const _locDef = JSON.parse(localStorage.getItem('sf4_locdef') || '{}');
+if(_locDef.alm)  document.getElementById('locAlm').value  = _locDef.alm;
+if(_locDef.nave) document.getElementById('locNave').value = _locDef.nave;
+// Aviso si no hay API Key configurada (solo visible en nota discreta)
+if(!getApiKey()){
+  setTimeout(() => showBar('noteBar', '⚠ Sin API Key configurada. Accede al panel admin para configurarla.'), 800);
+}
+</script>
+</body>
+</html>
