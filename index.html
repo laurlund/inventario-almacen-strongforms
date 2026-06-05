@@ -1557,6 +1557,10 @@ function openAdmin(){
 function closeAdmin(){
   document.getElementById('adminPanel').style.display = 'none';
   adminAuthenticated = false;
+  // Limpiar ?admin de la URL para que al cerrar no vuelva a abrirse
+  if(location.search.includes('admin') || location.hash.includes('admin')){
+    window.history.replaceState(null, '', location.pathname);
+  }
 }
 
 // ── CAMBIO CONTRASEÑA ──
