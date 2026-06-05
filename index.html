@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Strongforms · Inventario</title>
-<meta name="version" content="v4.2">
+<meta name="version" content="v4.3">
 <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600&family=Epilogue:wght@700;900&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════
@@ -254,7 +254,7 @@ input[type=file]{display:none}
 <!-- ═══ TOPBAR ═══ -->
 <div class="topbar">
   <div class="logo" id="logoBtn">
-    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.2</span>
+    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.3</span>
   </div>
   <div class="pill hidden" id="drivePill"><div class="dot"></div><span id="drivePillTxt">Drive ✓</span></div>
 </div>
@@ -670,8 +670,8 @@ input[type=file]{display:none}
           <input type="file" id="admPlanIn" accept="image/*" onchange="handleAdminPlan(event)" style="display:block;color:var(--text);font-size:.75rem">
         </div>
         <div class="r2">
-          <div class="field"><div class="lbl">Columnas (A–Z)</div><input type="number" id="admCols" value="8" min="2" max="26"></div>
-          <div class="field"><div class="lbl">Filas (1–N)</div><input type="number" id="admRows" value="6" min="2" max="20"></div>
+          <div class="field"><div class="lbl">Columnas (A–Z)</div><input type="number" id="admCols" value="5" min="2" max="26"></div>
+          <div class="field"><div class="lbl">Filas (1–N)</div><input type="number" id="admRows" value="7" min="2" max="20"></div>
         </div>
         <button class="btn btn-acc" onclick="saveGridCfg()">Guardar plano / cuadrícula</button>
       </div>
@@ -718,7 +718,7 @@ const SHEET_ID     = '1mGEYiK2n9CqKBbFZCDKznE7-tYB_uZ0WTmzlz5TdmOo';
 // ── STATE ──
 let catalog     = JSON.parse(localStorage.getItem('sf4_cat')  || '[]');
 let history     = JSON.parse(localStorage.getItem('sf4_hist') || '[]');
-let gridCfg     = JSON.parse(localStorage.getItem('sf4_grid') || '{"cols":8,"rows":6,"planImg":null}');
+let gridCfg     = JSON.parse(localStorage.getItem('sf4_grid') || '{"cols":5,"rows":7,"planImg":null}');
 let monthFolders= JSON.parse(localStorage.getItem('sf4_mf')   || '{}');
 
 let images       = [];     // [{base64, dataUrl}]
