@@ -1472,10 +1472,12 @@ function setCred(name, val){ localStorage.setItem('sf4_c_'+name, xorCipher(val, 
 function getApiKey(){ return getCred('apikey'); }
 function getModel()  { return localStorage.getItem('sf4_model') || 'claude-sonnet-4-5'; }
 
-// ── CONTRASEÑA ADMIN — sistema síncrono sin async ──
-// Guarda la contraseña ofuscada con XOR, sin SHA-256 async que puede fallar
-function savePw(pw){ localStorage.setItem('sf4_pw', xorCipher(pw, 'SF_ADM_2024')); }
-function checkPw(pw){ return xorDecipher(localStorage.getItem('sf4_pw') || '', 'SF_ADM_2024') === pw; }
+// ── CONTRASEÑA ADMIN — simple y directo ──
+function savePw(pw){ localStorage.setItem('sf4_pw', btoa(pw)); }
+function checkPw(pw){ 
+  try { return atob(localStorage.getItem('sf4_pw') || '') === pw; } 
+  catch(e){ return false; }
+}
 function hasPw(){ return !!localStorage.getItem('sf4_pw'); }
 
 // Estado admin
