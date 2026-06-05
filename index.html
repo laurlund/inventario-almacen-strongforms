@@ -1500,12 +1500,14 @@ function closeAdminLogin(){
 }
 
 async function checkAdminPw(){
-  const entered = document.getElementById('adminPwIn').value;
-  const storedHash = localStorage.getItem('sf4_pwhash');
+  const entered = document.getElementById('adminPwIn').value.trim();
+  if(!entered) return;
 
+  const storedHash = localStorage.getItem('sf4_pwhash');
   let valid = false;
+
   if(!storedHash){
-    // Primera vez — contraseña por defecto
+    // Primera vez en este dominio — solo acepta la contraseña por defecto
     valid = (entered === DEFAULT_PW);
     if(valid){
       const h = await hashPw(DEFAULT_PW);
@@ -1518,8 +1520,9 @@ async function checkAdminPw(){
 
   if(valid){
     adminAuthenticated = true;
-    closeAdminLogin();
-    openAdmin();
+    document.getElementById('adminLoginModal').classList.add('hidden');
+    // Pequeño delay para evitar bucle de eventos
+    setTimeout(() => openAdmin(), 50);
   } else {
     document.getElementById('adminLoginErr').classList.remove('hidden');
     document.getElementById('adminPwIn').value = '';
@@ -1529,8 +1532,6 @@ async function checkAdminPw(){
 
 // ── PANEL ADMIN ──
 function openAdmin(){
-  if(!adminAuthenticated){ openAdminLogin(); return; }
-
   // Rellenar campos con valores actuales
   document.getElementById('admApiKey').value   = getCred('apikey');
   document.getElementById('admModel').value    = getModel();
@@ -1541,17 +1542,21 @@ function openAdmin(){
   document.getElementById('admAlm').value  = locDef.alm  || '';
   document.getElementById('admNave').value = locDef.nave || '';
 
-  // Mostrar estado Google
   updateAdminDriveUI();
 
-  document.getElementById('adminPanel').style.display = 'flex';
-  // Limpiar URL si vino por ?admin
-  if(location.search.includes('admin')) history.replaceState(null,'', location.pathname + location.hash.replace('#admin',''));
+  // Mostrar panel — usar flex explícito
+  const panel = document.getElementById('adminPanel');
+  panel.style.display = 'flex';
+
+  // Limpiar ?admin de la URL sin recargar
+  if(location.search.includes('admin')){
+    history.replaceState(null, '', location.pathname + (location.hash.replace('#admin','') || ''));
+  }
 }
 
 function closeAdmin(){
   document.getElementById('adminPanel').style.display = 'none';
-  adminAuthenticated = false; // requiere nueva autenticación cada vez
+  adminAuthenticated = false;
 }
 
 // ── CAMBIO CONTRASEÑA ──
