@@ -38,7 +38,7 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:14px;display:flex;flex-direction:column}
-
+ 
 /* ── TOPBAR ── */
 .topbar{flex-shrink:0;height:50px;display:flex;align-items:center;padding:0 14px;background:var(--s1);border-bottom:1px solid var(--border);gap:10px}
 .logo{font-family:var(--display);font-size:1.2rem;font-weight:900;color:var(--acc);letter-spacing:-0.5px;flex:1}
@@ -48,26 +48,26 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:14
 .pill .dot{width:5px;height:5px;border-radius:50%;background:currentColor}
 .ibtn{width:32px;height:32px;background:var(--s2);border:1px solid var(--border);border-radius:6px;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:all .2s;flex-shrink:0}
 .ibtn:hover{border-color:var(--acc);color:var(--acc)}
-
+ 
 /* ── TABS ── */
 .tabs{flex-shrink:0;display:flex;background:var(--s1);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab{flex:1;padding:10px 8px;font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);cursor:pointer;border:none;background:none;font-family:var(--mono);border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s}
 .tab.active{color:var(--acc);border-bottom-color:var(--acc)}
-
+ 
 /* ── PANELS ── */
 .panel{display:none;flex:1;flex-direction:column;overflow:hidden}
 .panel.active{display:flex}
 .scroll{flex:1;overflow-y:auto;padding:14px;padding-bottom:28px}
 .scroll::-webkit-scrollbar{width:2px}
 .scroll::-webkit-scrollbar-thumb{background:var(--border)}
-
+ 
 /* ── CARD ── */
 .card{background:var(--s1);border:1px solid var(--border);border-radius:9px;overflow:hidden;margin-bottom:11px}
 .card-hdr{padding:8px 13px;background:var(--s2);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
 .card-hdr-lbl{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--text3)}
 .card-body{padding:13px}
-
+ 
 /* ── FORM ── */
 .field{margin-bottom:12px}
 .lbl{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:5px;display:block}
@@ -81,7 +81,7 @@ textarea{resize:vertical}
 input[type=file]{display:none}
 .r2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-
+ 
 /* ── BUTTONS ── */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:11px 14px;border:none;border-radius:7px;font-family:var(--mono);font-size:.65rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .15s;font-weight:600;white-space:nowrap}
 .btn-acc{background:var(--acc);color:#0c0d0f}
@@ -93,21 +93,21 @@ input[type=file]{display:none}
 .btn-full{width:100%}
 .brow{display:flex;gap:8px;margin-bottom:11px}
 .brow .btn{flex:1}
-
+ 
 /* ── CHIPS ── */
 .chip{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:20px;font-size:.58rem;letter-spacing:1px;text-transform:uppercase;font-weight:600}
 .chip-ok  {background:var(--green-dim);color:var(--green);border:1px solid rgba(46,168,85,.3)}
 .chip-warn{background:rgba(212,146,15,.1);color:var(--yellow);border:1px solid rgba(212,146,15,.3)}
 .chip-err {background:var(--red-dim);color:var(--red);border:1px solid rgba(191,53,53,.3)}
 .chip-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(66,135,214,.3)}
-
+ 
 /* ── BARS ── */
 .bar{padding:9px 12px;border-radius:0 7px 7px 0;font-size:.72rem;line-height:1.6;margin-bottom:10px}
 .bar-note {border-left:3px solid var(--acc);background:var(--acc-dim);color:var(--acc)}
 .bar-alert{border-left:3px solid var(--red);background:var(--red-dim);color:#e07070}
 .bar-ok   {border-left:3px solid var(--green);background:var(--green-dim);color:var(--green)}
 .bar-blue {border-left:3px solid var(--blue);background:var(--blue-dim);color:var(--blue)}
-
+ 
 /* ── CAPTURE ── */
 .cap-zone{position:relative;border:2px dashed var(--border);border-radius:9px;min-height:185px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:var(--s1);transition:border-color .2s;margin-bottom:10px}
 .cap-zone:hover{border-color:var(--acc)}
@@ -117,7 +117,7 @@ input[type=file]{display:none}
 .loading-ov{position:absolute;inset:0;background:rgba(0,0,0,.8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--acc);z-index:20}
 .spinner{width:26px;height:26px;border:2px solid var(--border);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-
+ 
 /* Thumbs */
 .thumbs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .thumb{position:relative;width:60px;height:60px;border-radius:6px;overflow:hidden;border:1px solid var(--border);flex-shrink:0}
@@ -125,13 +125,13 @@ input[type=file]{display:none}
 .tdel{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.8);border:none;color:#fff;border-radius:3px;width:16px;height:16px;font-size:.6rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .tadd{width:60px;height:60px;border-radius:6px;border:1px dashed var(--border);background:var(--s2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:.55rem;color:var(--text3);cursor:pointer;flex-shrink:0;transition:all .2s;text-align:center;letter-spacing:1px;text-transform:uppercase}
 .tadd:hover{border-color:var(--acc);color:var(--acc)}
-
+ 
 /* Confidence */
 .conf-row{display:flex;align-items:center;gap:9px;margin-bottom:8px}
 .conf-bg{flex:1;height:4px;background:var(--s4);border-radius:2px;overflow:hidden}
 .conf-fill{height:100%;border-radius:2px;transition:width .4s}
 .conf-lbl{font-size:.58rem;color:var(--text3);white-space:nowrap}
-
+ 
 /* Piece rows */
 .piece-row{display:flex;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);gap:7px}
 .piece-row:last-child{border-bottom:none}
@@ -144,12 +144,12 @@ input[type=file]{display:none}
 .total-bar{display:flex;justify-content:space-between;align-items:center;padding:9px 13px;background:var(--s2);border-top:1px solid var(--border)}
 .total-bar span{font-size:.58rem;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase}
 .total-bar strong{font-size:1.1rem;color:var(--acc)}
-
+ 
 /* Mode toggle */
 .mtoggle{display:flex;border:1px solid var(--border);border-radius:7px;overflow:hidden;margin-bottom:11px}
 .mbtn{flex:1;padding:9px 6px;text-align:center;font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:none;background:var(--s2);color:var(--text3);font-family:var(--mono);transition:all .2s}
 .mbtn.active{background:var(--acc-dim);color:var(--acc)}
-
+ 
 /* Grid */
 .grid-outer{position:relative;padding-left:18px;margin-bottom:7px}
 .col-lbls{display:flex;padding-left:0;margin-bottom:1px}
@@ -165,12 +165,12 @@ input[type=file]{display:none}
 .gcell.occ{background:rgba(66,135,214,.1);border-color:rgba(66,135,214,.2)}
 .gcell-l{font-size:.42rem;color:rgba(255,255,255,.18);pointer-events:none}
 .gcell.sel .gcell-l{color:var(--acc)}
-
+ 
 /* Breadcrumb */
 .bc{display:flex;align-items:center;gap:5px;flex-wrap:wrap;padding:7px 11px;background:var(--s2);border-radius:7px;border:1px solid var(--border);margin-bottom:9px}
 .bc-item{font-size:.75rem;color:var(--acc);font-weight:600}
 .bc-sep{color:var(--text3);font-size:.68rem}
-
+ 
 /* ── CATALOG ── */
 .cat-item{display:flex;align-items:center;padding:10px 12px;background:var(--s1);border:1px solid var(--border);border-radius:8px;margin-bottom:7px;gap:9px}
 .cat-ico{width:32px;height:32px;background:var(--s3);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
@@ -184,7 +184,7 @@ input[type=file]{display:none}
 .del-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:.8rem;padding:4px;transition:color .2s}
 .del-btn:hover{color:var(--red)}
 .sect-lbl{font-size:.56rem;color:var(--text3);letter-spacing:2.5px;text-transform:uppercase;padding:10px 0 6px;border-bottom:1px solid var(--border);margin-bottom:8px}
-
+ 
 /* ── HISTORY ── */
 .hist-item{background:var(--s1);border:1px solid var(--border);border-radius:9px;margin-bottom:11px;overflow:hidden}
 .hist-hdr{padding:8px 13px;background:var(--s2);display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
@@ -197,7 +197,7 @@ input[type=file]{display:none}
 .hist-pr span:last-child{color:var(--acc);font-weight:600}
 .hist-link{display:inline-flex;align-items:center;gap:4px;font-size:.6rem;color:var(--blue);text-decoration:none;margin-top:5px;margin-right:8px}
 .hist-link:hover{text-decoration:underline}
-
+ 
 /* KPI */
 .kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:13px}
 .kpi{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
@@ -205,7 +205,7 @@ input[type=file]{display:none}
 .kpi-l{font-size:.56rem;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px}
 .kpi.blue .kpi-v{color:var(--blue)}
 .kpi.green .kpi-v{color:var(--green)}
-
+ 
 /* ── MODALS ── */
 .mbd{position:fixed;inset:0;background:rgba(0,0,0,.92);display:flex;align-items:flex-end;justify-content:center;z-index:500}
 .modal{background:var(--s1);border-top:2px solid var(--acc);border-radius:16px 16px 0 0;padding:20px 16px 34px;width:100%;max-width:520px;animation:up .22s ease;max-height:92vh;overflow-y:auto}
@@ -223,12 +223,12 @@ input[type=file]{display:none}
 .more-ph{width:100%;padding:9px;background:var(--s2);border:1px dashed var(--border);border-radius:7px;color:var(--text3);font-size:.65rem;cursor:pointer;font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;transition:all .2s;margin-bottom:10px}
 .more-ph:hover{border-color:var(--acc);color:var(--acc)}
 .divider{border:none;border-top:1px solid var(--border);margin:11px 0}
-
+ 
 /* Manual entry highlight */
 .manual-field{background:var(--s1);border:1px solid var(--acc);border-radius:8px;padding:11px;margin-bottom:11px}
 .manual-field .lbl{color:var(--acc)}
 .manual-field input{background:var(--s2);border-color:var(--border2)}
-
+ 
 /* Settings */
 .smodal{border-top-color:var(--blue)}
 .smodal h3{color:var(--blue)}
@@ -238,13 +238,13 @@ input[type=file]{display:none}
 .st{font-size:.7rem;line-height:1.6;color:var(--text2)}
 .st strong{color:var(--text)}
 .st a{color:var(--blue)}
-
+ 
 /* Empty */
 .empty{text-align:center;color:var(--text3);font-size:.7rem;letter-spacing:1px;text-transform:uppercase;padding:32px 0;line-height:2}
 </style>
 </head>
 <body>
-
+ 
 <!-- ═══ TOPBAR ═══ -->
 <div class="topbar">
   <!-- Logo: toque largo 5s → abre acceso admin (invisible para Marcos) -->
@@ -254,27 +254,27 @@ input[type=file]{display:none}
   <!-- Pill solo visible cuando admin ha conectado Drive en esta sesión -->
   <div class="pill hidden" id="drivePill"><div class="dot"></div><span id="drivePillTxt">Drive ✓</span></div>
 </div>
-
+ 
 <!-- ═══ TABS ═══ -->
 <div class="tabs">
   <button class="tab active" onclick="switchTab('scan',this)">📷 Escanear</button>
   <button class="tab" onclick="switchTab('cat',this)">📦 Catálogo</button>
   <button class="tab" onclick="switchTab('hist',this)">📋 Historial</button>
 </div>
-
+ 
 <!-- ══════════════════════════════
      PANEL: ESCANEO
 ══════════════════════════════ -->
 <div id="panel-scan" class="panel active">
 <div class="scroll">
-
+ 
   <!-- Modo paquete -->
   <div class="mtoggle">
     <button class="mbtn active" id="modeNorm" onclick="setMode('normal')">📦 Paquete normal</button>
     <button class="mbtn" id="modeMix"  onclick="setMode('mixed')">🔀 Paquete mixto</button>
   </div>
   <div id="mixBar" class="bar bar-blue hidden">Modo mixto: toma cenital + lateral. La IA buscará activamente distintos tipos mezclados.</div>
-
+ 
   <!-- Capture -->
   <div class="cap-zone" id="capZone" onclick="triggerCap()">
     <div class="cap-ph" id="capPh">
@@ -289,25 +289,25 @@ input[type=file]{display:none}
     </div>
   </div>
   <input type="file" id="fileIn" accept="image/*" capture="environment" onchange="handleFile(event)">
-
+ 
   <!-- Thumbs multi-foto -->
   <div class="thumbs hidden" id="thumbs"></div>
-
+ 
   <div class="brow">
     <button class="btn btn-ghost" onclick="triggerCap()">📷 + Foto</button>
     <button class="btn btn-acc" id="analyzeBtn" disabled onclick="startAnalysis()">▶ Analizar</button>
   </div>
-
+ 
   <!-- Barra de confianza global -->
   <div id="confRow" class="conf-row hidden">
     <div class="conf-bg"><div class="conf-fill" id="confFill"></div></div>
     <div class="conf-lbl" id="confLbl"></div>
   </div>
-
+ 
   <!-- Notas / alertas -->
   <div id="noteBar"  class="bar bar-note  hidden"></div>
   <div id="alertBar" class="bar bar-alert hidden"></div>
-
+ 
   <!-- Resultado -->
   <div class="card hidden" id="resultCard">
     <div class="card-hdr">
@@ -320,7 +320,7 @@ input[type=file]{display:none}
       <strong id="totalCount">0</strong>
     </div>
   </div>
-
+ 
   <!-- Ubicación -->
   <div id="locSection" class="hidden">
     <div class="lbl" style="margin:4px 0 8px">Ubicación en almacén</div>
@@ -334,9 +334,9 @@ input[type=file]{display:none}
         <input type="text" id="locNave" placeholder="Nave 2" oninput="updateBC()">
       </div>
     </div>
-
+ 
     <div class="bc" id="bc"><span style="color:var(--text3);font-size:.7rem">Sin seleccionar</span></div>
-
+ 
     <!-- Grid -->
     <div class="card" style="margin-bottom:10px">
       <div class="card-hdr">
@@ -365,23 +365,23 @@ input[type=file]{display:none}
         </div>
       </div>
     </div>
-
+ 
     <div class="field">
       <div class="lbl">Observaciones</div>
       <textarea id="obsIn" rows="2" placeholder="Junto a viga central, en palets…"></textarea>
     </div>
   </div>
-
+ 
   <!-- Save row -->
   <div class="brow" id="saveRow" style="display:none">
     <button class="btn btn-ghost" onclick="resetScan()">🗑 Descartar</button>
     <button class="btn btn-acc" onclick="saveRecord()">💾 Guardar</button>
   </div>
   <div id="okBar" class="bar bar-ok hidden"></div>
-
+ 
 </div>
 </div>
-
+ 
 <!-- ══════════════════════════════
      PANEL: CATÁLOGO
 ══════════════════════════════ -->
@@ -394,7 +394,7 @@ input[type=file]{display:none}
   <div id="catPerfiles"></div>
 </div>
 </div>
-
+ 
 <!-- ══════════════════════════════
      PANEL: HISTORIAL
 ══════════════════════════════ -->
@@ -408,7 +408,7 @@ input[type=file]{display:none}
   <div id="histList"></div>
 </div>
 </div>
-
+ 
 <!-- ══════════════════════════════
      MODAL: IDENTIFICAR PIEZA
 ══════════════════════════════ -->
@@ -416,24 +416,24 @@ input[type=file]{display:none}
 <div class="modal">
   <h3 id="identTitle">Identificar pieza</h3>
   <p id="identDesc"></p>
-
+ 
   <!-- Fotos de la sesión -->
   <div class="modal-imgs" id="identImgs"></div>
-
+ 
   <!-- Chip confianza -->
   <div id="identConf" class="chip" style="margin-bottom:11px"></div>
-
+ 
   <!-- Botón más foto -->
   <button class="more-ph" onclick="addMorePhoto()">📷 Añadir otra foto para aclarar</button>
   <input type="file" id="extraIn" accept="image/*" capture="environment" onchange="handleExtraPhoto(event)">
-
+ 
   <!-- Sugerencias del catálogo -->
   <div id="sugWrap" class="hidden">
     <div class="lbl">¿Es alguna de estas?</div>
     <div class="sug-row" id="sugRow"></div>
     <div class="divider"></div>
   </div>
-
+ 
   <!-- ★ ENTRADA MANUAL siempre visible ★ -->
   <div class="manual-field">
     <div class="lbl">Nombre / código</div>
@@ -443,14 +443,14 @@ input[type=file]{display:none}
     <div class="lbl" style="margin-top:9px">Alias / descripción corta (opcional)</div>
     <input type="text" id="pieceAliasIn" placeholder="panel grande ext., perfil macho…">
   </div>
-
+ 
   <div class="brow" style="padding:0;margin-top:4px">
     <button class="btn btn-ghost" onclick="skipPiece()">Omitir</button>
     <button class="btn btn-acc" onclick="confirmPiece()">Confirmar</button>
   </div>
 </div>
 </div>
-
+ 
 <!-- ══════════════════════════════
      MODAL: NUEVA PIEZA CATÁLOGO
 ══════════════════════════════ -->
@@ -458,12 +458,12 @@ input[type=file]{display:none}
 <div class="modal">
   <h3 id="catMTitle">Nueva pieza</h3>
   <p>Define la pieza para el catálogo de reconocimiento.</p>
-
+ 
   <div class="mtoggle" style="margin-bottom:11px">
     <button class="mbtn active" id="ctPlaca"   onclick="setCatType('placa')">🔲 Placa fabricada</button>
     <button class="mbtn"        id="ctPerfil"  onclick="setCatType('perfil')">🔩 Perfil en bruto</button>
   </div>
-
+ 
   <div class="field">
     <div class="lbl">Código (clave única)</div>
     <input type="text" id="cCode" placeholder="FMEX_2950x600x54 · SF_0101">
@@ -472,7 +472,7 @@ input[type=file]{display:none}
     <div class="lbl">Nombre descriptivo</div>
     <input type="text" id="cName" placeholder="Placa encofrado muro ext.">
   </div>
-
+ 
   <div class="r3">
     <div class="field">
       <div class="lbl">H (mm)</div>
@@ -487,7 +487,7 @@ input[type=file]{display:none}
       <input type="number" id="cB" placeholder="54" value="54">
     </div>
   </div>
-
+ 
   <div class="r2">
     <div class="field">
       <div class="lbl">Peso kg/m</div>
@@ -498,12 +498,12 @@ input[type=file]{display:none}
       <input type="number" id="cLargo" placeholder="6000">
     </div>
   </div>
-
+ 
   <div class="field">
     <div class="lbl">Alias (opcional)</div>
     <input type="text" id="cAlias" placeholder="panel grande ext., macho 6m…">
   </div>
-
+ 
   <div class="field">
     <div class="lbl">Link ficha SVG en Drive (opcional)</div>
     <input type="text" id="cSvg" placeholder="https://drive.google.com/…">
@@ -519,14 +519,14 @@ input[type=file]{display:none}
   <div id="cRenderPreview" class="hidden" style="margin-bottom:10px">
     <img id="cRenderImg" style="width:100%;max-height:90px;object-fit:cover;border-radius:6px;border:1px solid var(--border)" alt="render">
   </div>
-
+ 
   <div class="brow" style="padding:0">
     <button class="btn btn-ghost" onclick="closeCatModal()">Cancelar</button>
     <button class="btn btn-acc" onclick="saveCatItem()">Guardar</button>
   </div>
 </div>
 </div>
-
+ 
 <!-- ══════════════════════════════
      MODAL: PLANO
 ══════════════════════════════ -->
@@ -548,7 +548,7 @@ input[type=file]{display:none}
   </div>
 </div>
 </div>
-
+ 
 <!-- ══════════════════════════════
      MODAL: LOGIN ADMIN
 ══════════════════════════════ -->
@@ -567,12 +567,12 @@ input[type=file]{display:none}
   </div>
 </div>
 </div>
-
+ 
 <!-- ══════════════════════════════
      PANEL: ADMIN (oculto para Marcos)
 ══════════════════════════════ -->
 <div id="adminPanel" class="hidden" style="position:fixed;inset:0;background:var(--bg);z-index:900;display:flex;flex-direction:column;overflow:hidden">
-
+ 
   <!-- Admin topbar -->
   <div style="flex-shrink:0;height:50px;display:flex;align-items:center;padding:0 14px;background:var(--s1);border-bottom:2px solid var(--blue);gap:10px">
     <div style="font-family:var(--display);font-size:1.1rem;font-weight:900;color:var(--blue);flex:1">
@@ -581,9 +581,9 @@ input[type=file]{display:none}
     <div id="adminDriveSt" style="font-size:.62rem"></div>
     <button class="ibtn" onclick="closeAdmin()" title="Cerrar">✕</button>
   </div>
-
+ 
   <div style="flex:1;overflow-y:auto;padding:14px">
-
+ 
     <!-- Sección: Cambiar contraseña -->
     <div class="card">
       <div class="card-hdr"><span class="card-hdr-lbl">🔑 Contraseña admin</span></div>
@@ -606,7 +606,7 @@ input[type=file]{display:none}
         <button class="btn btn-ghost" onclick="changePassword()">Cambiar contraseña</button>
       </div>
     </div>
-
+ 
     <!-- Sección: API Claude -->
     <div class="card">
       <div class="card-hdr"><span class="card-hdr-lbl">🤖 Claude API (Anthropic)</span></div>
@@ -630,7 +630,7 @@ input[type=file]{display:none}
         <button class="btn btn-acc" onclick="saveApiCfg()">Guardar API</button>
       </div>
     </div>
-
+ 
     <!-- Sección: Google Drive + Sheets -->
     <div class="card">
       <div class="card-hdr">
@@ -656,7 +656,7 @@ input[type=file]{display:none}
         </div>
       </div>
     </div>
-
+ 
     <!-- Sección: Plano y grid -->
     <div class="card">
       <div class="card-hdr"><span class="card-hdr-lbl">🗺 Plano de nave y cuadrícula</span></div>
@@ -672,7 +672,7 @@ input[type=file]{display:none}
         <button class="btn btn-acc" onclick="saveGridCfg()">Guardar plano / cuadrícula</button>
       </div>
     </div>
-
+ 
     <!-- Sección: Almacén por defecto -->
     <div class="card">
       <div class="card-hdr"><span class="card-hdr-lbl">📍 Ubicación por defecto</span></div>
@@ -684,7 +684,7 @@ input[type=file]{display:none}
         <button class="btn btn-acc" onclick="saveLocationDefaults()">Guardar</button>
       </div>
     </div>
-
+ 
     <!-- Sección: Peligrosa -->
     <div class="card" style="border-color:rgba(191,53,53,.3)">
       <div class="card-hdr" style="background:rgba(191,53,53,.08)"><span class="card-hdr-lbl" style="color:var(--red)">⚠ Zona peligrosa</span></div>
@@ -696,11 +696,11 @@ input[type=file]{display:none}
         </div>
       </div>
     </div>
-
+ 
     <div style="height:20px"></div>
   </div>
 </div>
-
+ 
 <!-- ═══════════════════════════════════════════════════
      JAVASCRIPT
 ═══════════════════════════════════════════════════ -->
@@ -710,13 +710,13 @@ const DRIVE_ROOT   = '1yZ1J1bjsM2oqIsEkf7IO-XS_LWGJYBUB';
 const DRIVE_FOTOS  = '1zkBtfb3eQcTwItMTcxmyuMDqsc_R7E-I';
 const DRIVE_FICHAS = '1sIKgD_BFsEgoabwhXBMzn5qOJg1e-5gl';
 const SHEET_ID     = '1mGEYiK2n9CqKBbFZCDKznE7-tYB_uZ0WTmzlz5TdmOo';
-
+ 
 // ── STATE ──
 let catalog     = JSON.parse(localStorage.getItem('sf4_cat')  || '[]');
 let history     = JSON.parse(localStorage.getItem('sf4_hist') || '[]');
 let gridCfg     = JSON.parse(localStorage.getItem('sf4_grid') || '{"cols":8,"rows":6,"planImg":null}');
 let monthFolders= JSON.parse(localStorage.getItem('sf4_mf')   || '{}');
-
+ 
 let images       = [];     // [{base64, dataUrl}]
 let currentScan  = null;
 let resolved     = [];     // piezas confirmadas
@@ -727,7 +727,7 @@ let selCell      = null;
 let oauthToken   = localStorage.getItem('sf4_token') || null;
 let pendingRender= null;
 let catType      = 'placa';
-
+ 
 // ── IMAGE RESIZE (móvil 12MP → 1024px max) ──
 const MAX_PX = 1024, IMG_Q = 0.88;
 function resize(file, cb){
@@ -752,7 +752,7 @@ function resize(file, cb){
   };
   r.readAsDataURL(file);
 }
-
+ 
 // ── TABS ──
 function switchTab(id, el){
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -762,7 +762,7 @@ function switchTab(id, el){
   if(id === 'cat')  renderCatalog();
   if(id === 'hist') renderHistory();
 }
-
+ 
 // ── MODE ──
 function setMode(m){
   scanMode = m;
@@ -770,10 +770,10 @@ function setMode(m){
   document.getElementById('modeMix').classList.toggle('active', m === 'mixed');
   document.getElementById('mixBar').classList.toggle('hidden', m === 'normal');
 }
-
+ 
 // ── CAPTURE ──
 function triggerCap(){ document.getElementById('fileIn').click(); }
-
+ 
 function handleFile(e){
   const f = e.target.files[0]; if(!f) return;
   resize(f, (b64, url) => {
@@ -783,7 +783,7 @@ function handleFile(e){
   });
   e.target.value = '';
 }
-
+ 
 function refreshPreview(){
   if(!images.length) return;
   const last = images[images.length - 1].dataUrl;
@@ -793,7 +793,7 @@ function refreshPreview(){
   document.getElementById('analyzeBtn').disabled = false;
   renderThumbs();
 }
-
+ 
 function renderThumbs(){
   const row = document.getElementById('thumbs');
   if(images.length <= 1){ row.classList.add('hidden'); return; }
@@ -805,7 +805,7 @@ function renderThumbs(){
     </div>
   `).join('') + `<div class="tadd" onclick="triggerCap()"><span style="font-size:1.1rem">+</span><span>Foto</span></div>`;
 }
-
+ 
 function removeThumb(i){
   images.splice(i, 1);
   if(!images.length){
@@ -817,61 +817,61 @@ function removeThumb(i){
   }
   renderThumbs();
 }
-
+ 
 function resetResult(){
   ['resultCard','confRow','noteBar','alertBar','locSection','okBar'].forEach(id => {
     document.getElementById(id).classList.add('hidden');
   });
   document.getElementById('saveRow').style.display = 'none';
 }
-
+ 
 // ── ANÁLISIS ──
 async function startAnalysis(){
   const key = getApiKey();
   if(!key){ openAdminLogin(); return; }
   if(!images.length) return;
-
+ 
   setLoad(true, 'Analizando imagen…');
   document.getElementById('analyzeBtn').disabled = true;
   resolved = [];
-
+ 
   // Renders del catálogo como referencia visual
   const refBlocks = catalog
     .filter(c => c.renderB64)
     .slice(0, 4)
     .map(c => ({type:'image', source:{type:'base64', media_type:'image/jpeg', data:c.renderB64}}));
-
+ 
   const catDesc = catalog.length
     ? 'CATÁLOGO:\n' + catalog.map(c =>
         `• ${c.code} — "${c.name}" | Tipo:${c.type} | H:${c.h||'?'} A:${c.a||'?'} B:${c.b||'?'}mm${c.alias?' / '+c.alias:''}`
       ).join('\n')
     : 'CATÁLOGO VACÍO — describe cada tipo detectado con el máximo detalle.';
-
+ 
   const mixNote = scanMode === 'mixed'
     ? '\nMODO MIXTO: busca activamente DISTINTOS tipos en el mismo paquete. Lista cada tipo por separado aunque sea 1 unidad.'
     : '';
-
+ 
   const refNote = refBlocks.length
     ? `\nIMAGENES REFERENCIA: las primeras ${refBlocks.length} imágenes son renders de catálogo. La(s) última(s) son la foto real.`
     : '';
-
+ 
   const system = `Eres un experto en inventario de encofrado metálico Strongforms. Cuenta piezas con precisión.
-
+ 
 ${catDesc}${mixNote}${refNote}
-
+ 
 REGLAS:
 1. Confianza ≥ 95% + pieza del catálogo → known:true
 2. Cualquier duda, pieza parecida, parcialmente oculta, mala foto → known:false, confidence < 0.95
 3. Si no la reconoces → known:false, describe todo lo que ves (dimensiones visibles, forma, tipo perfil)
 4. SIEMPRE incluye dims estimadas {h,a,b} aunque sean aproximadas — ayuda al operario a confirmar
 5. El conteo es prioritario — si no estás seguro del nombre pero puedes contar, hazlo
-
+ 
 Responde SOLO JSON sin markdown:
 {"pieces":[{"label":"nombre o descripción","count":N,"known":bool,"confidence":0.0-1.0,"type":"placa|perfil","dims":{"h":null,"a":null,"b":null},"reason":"1 frase breve"}],"globalConfidence":0.0-1.0,"notes":null,"alerts":null}`;
-
+ 
   const photoBlocks = images.map(i => ({type:'image', source:{type:'base64', media_type:'image/jpeg', data:i.base64}}));
   const allBlocks = [...refBlocks, ...photoBlocks];
-
+ 
   try{
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -883,51 +883,51 @@ Responde SOLO JSON sin markdown:
         messages: [{role:'user', content:[...allBlocks, {type:'text', text:`Analiza ${images.length} foto(s). Modo: ${scanMode}.`}]}]
       })
     });
-
+ 
     setLoad(false);
     const data = await resp.json();
-
+ 
     if(data.error){
       showBar('alertBar', '⚠ Error API: ' + data.error.message);
       document.getElementById('analyzeBtn').disabled = false;
       return;
     }
-
+ 
     const raw = data.content[0].text.replace(/```json|```/g,'').trim();
     currentScan = JSON.parse(raw);
-
+ 
     renderConf(currentScan.globalConfidence);
     if(currentScan.notes)  showBar('noteBar',  '📝 ' + currentScan.notes);
     if(currentScan.alerts) showBar('alertBar', '⚠ ALERTA: ' + currentScan.alerts);
-
+ 
     // Alta confianza → directamente resueltas
     const highConf = currentScan.pieces.filter(p => p.known && p.confidence >= 0.95);
     // Todo lo demás → cola de confirmación manual
     const needsId  = currentScan.pieces.filter(p => !p.known || p.confidence < 0.95);
-
+ 
     resolved = highConf.map(p => ({
       id: findCatId(p.label), name: p.label,
       count: p.count, confidence: p.confidence, type: p.type
     }));
-
+ 
     renderResultCard(resolved);
     queue = [...needsId];
-
+ 
     if(queue.length) nextUnknown();
     else showLoc();
-
+ 
   } catch(err){
     setLoad(false);
     showBar('alertBar', '⚠ Error: ' + err.message);
     document.getElementById('analyzeBtn').disabled = false;
   }
 }
-
+ 
 function setLoad(on, msg = ''){
   if(msg) document.getElementById('loadMsg').textContent = msg;
   document.getElementById('loadOv').classList.toggle('hidden', !on);
 }
-
+ 
 function renderConf(val){
   const pct = Math.round(val * 100);
   const fill = document.getElementById('confFill');
@@ -936,12 +936,12 @@ function renderConf(val){
   document.getElementById('confLbl').textContent = 'Confianza IA: ' + pct + '%';
   document.getElementById('confRow').classList.remove('hidden');
 }
-
+ 
 function showBar(id, msg){
   const el = document.getElementById(id);
   el.innerHTML = msg; el.classList.remove('hidden');
 }
-
+ 
 function renderResultCard(pieces){
   const body = document.getElementById('resultBody');
   let total = 0;
@@ -962,56 +962,56 @@ function renderResultCard(pieces){
     </div>`;
   }).join('');
   document.getElementById('totalCount').textContent = total;
-
+ 
   const gc = currentScan?.globalConfidence || 0;
   const chip = document.getElementById('resultChip');
   if(gc >= 0.95){ chip.className = 'chip chip-ok'; chip.textContent = '✓ Alta confianza'; }
   else if(gc >= 0.7){ chip.className = 'chip chip-warn'; chip.textContent = '⚠ Revisar'; }
   else { chip.className = 'chip chip-err'; chip.textContent = '✕ Confirmar manual'; }
-
+ 
   document.getElementById('resultCard').classList.remove('hidden');
 }
-
+ 
 function showLoc(){
   document.getElementById('locSection').classList.remove('hidden');
   document.getElementById('saveRow').style.display = 'flex';
   buildGrid();
 }
-
+ 
 // ── IDENTIFICACIÓN ──
 function nextUnknown(){
   if(!queue.length){ renderResultCard(resolved); showLoc(); return; }
   current = queue.shift();
   openIdentModal(current);
 }
-
+ 
 function openIdentModal(item){
   const pct = Math.round((item.confidence || 0) * 100);
   const isKnown = item.known;
-
+ 
   document.getElementById('identTitle').textContent =
     isKnown ? '⚠ Confirmar — duda de la IA' : '❓ Pieza no reconocida';
-
+ 
   // Descripción con dimensiones estimadas si las hay
   const dims = item.dims;
   const dimsStr = dims && (dims.h || dims.a || dims.b)
     ? ` Dimensiones estimadas: H${dims.h||'?'} × A${dims.a||'?'} × B${dims.b||'?'}mm.`
     : '';
-
+ 
   document.getElementById('identDesc').textContent = isKnown
     ? `La IA cree que es "${item.label}" pero solo con ${pct}% de confianza. ${item.reason || ''}${dimsStr} ¿Es correcto o lo corriges?`
     : `La IA no reconoce esta pieza con seguridad (${pct}%). ${item.reason || ''}${dimsStr} ¿Cómo se llama?`;
-
+ 
   // Fotos
   document.getElementById('identImgs').innerHTML =
     images.map(i => `<img class="modal-img" src="${i.dataUrl}">`).join('');
-
+ 
   // Chip confianza
   const chip = document.getElementById('identConf');
   const cls = pct >= 95 ? 'chip-ok' : pct >= 70 ? 'chip-warn' : 'chip-err';
   chip.className = 'chip ' + cls;
   chip.textContent = `IA: ${pct}% — ${item.reason || '—'}`;
-
+ 
   // Sugerencias catálogo
   const sugW = document.getElementById('sugWrap');
   if(catalog.length){
@@ -1021,28 +1021,28 @@ function openIdentModal(item){
         `<button class="sug-btn" onclick="selectSug('${(c.code||c.name).replace(/'/g,"\\'")}',this)">${c.emoji||'🔲'} ${c.code||c.name}</button>`
       ).join('');
   } else sugW.classList.add('hidden');
-
+ 
   // ★ Pre-rellenar campos manuales con lo que dijo la IA
   document.getElementById('pieceNameIn').value = item.label;
   document.getElementById('pieceCountIn').value = item.count;
   document.getElementById('aiCountHint').textContent = item.count;
   document.getElementById('pieceAliasIn').value = '';
-
+ 
   document.getElementById('identModal').classList.remove('hidden');
   setTimeout(() => document.getElementById('pieceNameIn').focus(), 150);
 }
-
+ 
 function selectSug(name, el){
   document.querySelectorAll('.sug-btn').forEach(b => b.classList.remove('sel'));
   el.classList.add('sel');
   document.getElementById('pieceNameIn').value = name;
 }
-
+ 
 function confirmPiece(){
   const name  = document.getElementById('pieceNameIn').value.trim(); if(!name) return;
   const count = parseInt(document.getElementById('pieceCountIn').value) || current.count;
   const alias = document.getElementById('pieceAliasIn').value.trim();
-
+ 
   let id = findCatId(name);
   if(!id){
     id = 'c_' + Date.now();
@@ -1059,13 +1059,13 @@ function confirmPiece(){
     catalog.push(newItem);
     saveCatalog();
   }
-
+ 
   resolved.push({id, name, count, confidence: 1.0, type: current.type});
   document.getElementById('identModal').classList.add('hidden');
   current = null;
   nextUnknown();
 }
-
+ 
 function skipPiece(){
   // Aún en modo skip, usamos la cantidad que el usuario haya escrito
   const count = parseInt(document.getElementById('pieceCountIn').value) || current.count;
@@ -1074,7 +1074,7 @@ function skipPiece(){
   current = null;
   nextUnknown();
 }
-
+ 
 function addMorePhoto(){ document.getElementById('extraIn').click(); }
 function handleExtraPhoto(e){
   const f = e.target.files[0]; if(!f) return;
@@ -1087,7 +1087,7 @@ function handleExtraPhoto(e){
   });
   e.target.value = '';
 }
-
+ 
 // ── GRID ──
 function buildGrid(){
   const cols = gridCfg.cols || 8, rows = gridCfg.rows || 6;
@@ -1096,17 +1096,17 @@ function buildGrid(){
   ovl.style.gridTemplateColumns = `repeat(${cols},1fr)`;
   ovl.style.gridTemplateRows    = `repeat(${rows},1fr)`;
   ovl.innerHTML = '';
-
+ 
   document.getElementById('colLbls').innerHTML =
     '<div style="width:16px;flex-shrink:0"></div>' +
     letters.split('').map(l => `<div class="col-lbl">${l}</div>`).join('');
-
+ 
   const rl = document.getElementById('rowLbls'); rl.innerHTML = '';
   for(let r = 1; r <= rows; r++){
     const d = document.createElement('div');
     d.className = 'row-lbl'; d.textContent = r; rl.appendChild(d);
   }
-
+ 
   for(let r = 1; r <= rows; r++){
     for(let c = 0; c < cols; c++){
       const l = letters[c], coord = l + r;
@@ -1119,18 +1119,18 @@ function buildGrid(){
       ovl.appendChild(cell);
     }
   }
-
+ 
   if(gridCfg.planImg){
     document.getElementById('planBg').src = gridCfg.planImg;
     document.getElementById('planBg').classList.remove('hidden');
   }
-
+ 
   if(selCell){
     const ex = ovl.querySelector(`[data-col="${selCell.col}"][data-row="${selCell.row}"]`);
     if(ex) ex.classList.add('sel');
   }
 }
-
+ 
 function selectCell(col, row, el){
   document.querySelectorAll('.gcell.sel').forEach(c => c.classList.remove('sel'));
   el.classList.add('sel'); selCell = {col, row};
@@ -1138,7 +1138,7 @@ function selectCell(col, row, el){
   document.getElementById('selLbl').textContent = col + row;
   updateBC();
 }
-
+ 
 function syncZona(){
   const v = document.getElementById('zonaIn').value.trim().toUpperCase();
   const m = v.match(/^([A-Z])(\d+)$/);
@@ -1153,7 +1153,7 @@ function syncZona(){
   }
   updateBC();
 }
-
+ 
 function updateBC(){
   const alm  = document.getElementById('locAlm').value.trim()  || '—';
   const nave  = document.getElementById('locNave').value.trim() || '—';
@@ -1165,7 +1165,7 @@ function updateBC(){
     <span class="bc-sep">›</span>
     <span class="bc-item">${zona}</span>`;
 }
-
+ 
 function openPlanModal(){ document.getElementById('planModal').classList.remove('hidden'); }
 function closePlanModal(){ document.getElementById('planModal').classList.add('hidden'); }
 let pendingPlan = null;
@@ -1175,7 +1175,7 @@ function applyPlan(){
   localStorage.setItem('sf4_grid', JSON.stringify(gridCfg));
   closePlanModal(); buildGrid();
 }
-
+ 
 // ── GUARDAR REGISTRO ──
 async function saveRecord(){
   const alm  = document.getElementById('locAlm').value.trim();
@@ -1185,13 +1185,13 @@ async function saveRecord(){
   const total = resolved.reduce((s, p) => s + p.count, 0);
   const dateStr = new Date().toISOString().slice(0, 10);
   const id = 'r_' + Date.now();
-
+ 
   // Actualizar totalScanned en catálogo
   resolved.forEach(p => {
     if(p.id){ const c = catalog.find(x => x.id === p.id); if(c) c.totalScanned = (c.totalScanned || 0) + p.count; }
   });
   saveCatalog();
-
+ 
   const entry = {
     id, date: new Date().toLocaleString('es-ES'), dateISO: new Date().toISOString(),
     location: {almacen: alm, nave, zona, obs},
@@ -1199,7 +1199,7 @@ async function saveRecord(){
     photoDataUrls: images.map(i => i.dataUrl),
     driveFiles: [], sheetSynced: false
   };
-
+ 
   // Upload fotos a Drive
   if(oauthToken && images.length){
     setLoad(true, 'Subiendo fotos a Drive…');
@@ -1214,7 +1214,7 @@ async function saveRecord(){
     }
     setLoad(false);
   }
-
+ 
   // Escribir en Sheets
   if(oauthToken){
     setLoad(true, 'Guardando en Sheets…');
@@ -1222,10 +1222,10 @@ async function saveRecord(){
     entry.sheetSynced = true;
     setLoad(false);
   }
-
+ 
   history.unshift(entry);
   saveHistory();
-
+ 
   document.getElementById('saveRow').style.display = 'none';
   const ok = document.getElementById('okBar');
   const driveInfo = entry.driveFiles.length ? ` · ${entry.driveFiles.length} foto(s) en Drive` : '';
@@ -1234,7 +1234,7 @@ async function saveRecord(){
   ok.classList.remove('hidden');
   buildGrid();
 }
-
+ 
 // ── DRIVE API ──
 async function getMonthFolder(monthKey){
   if(monthFolders[monthKey]) return monthFolders[monthKey];
@@ -1252,7 +1252,7 @@ async function getMonthFolder(monthKey){
     return cd.id;
   } catch{ return DRIVE_FOTOS; }
 }
-
+ 
 async function uploadPhoto(b64, filename, folderId){
   try{
     const bnd = 'SF_' + Date.now();
@@ -1264,7 +1264,7 @@ async function uploadPhoto(b64, filename, folderId){
     const d = await r.json(); return d.id || null;
   } catch{ return null; }
 }
-
+ 
 // ── SHEETS API ──
 async function appendInventario(entry){
   const photoLink = entry.driveFiles.map(f => f.url).join(' | ');
@@ -1282,7 +1282,7 @@ async function appendInventario(entry){
     });
   } catch{}
 }
-
+ 
 // Inicializar cabeceras del Sheet la primera vez
 async function ensureSheetHeaders(){
   if(!oauthToken) return;
@@ -1294,7 +1294,7 @@ async function ensureSheetHeaders(){
     });
   } catch{}
 }
-
+ 
 // ── CATÁLOGO ──
 function setCatType(t){
   catType = t;
@@ -1302,7 +1302,7 @@ function setCatType(t){
   document.getElementById('ctPerfil').classList.toggle('active', t === 'perfil');
   document.getElementById('cLargoWrap').style.display = t === 'perfil' ? 'block' : 'none';
 }
-
+ 
 function openCatModal(){
   document.getElementById('cCode').value = '';
   document.getElementById('cName').value = '';
@@ -1320,7 +1320,7 @@ function openCatModal(){
   document.getElementById('catModal').classList.remove('hidden');
 }
 function closeCatModal(){ document.getElementById('catModal').classList.add('hidden'); pendingRender = null; }
-
+ 
 function handleRender(e){
   const f = e.target.files[0]; if(!f) return;
   resize(f, (b64, url) => {
@@ -1330,7 +1330,7 @@ function handleRender(e){
   });
   e.target.value = '';
 }
-
+ 
 function saveCatItem(){
   const code = document.getElementById('cCode').value.trim(); if(!code) return;
   const name = document.getElementById('cName').value.trim() || code;
@@ -1357,11 +1357,11 @@ function saveCatItem(){
   pendingRender = null;
   closeCatModal(); renderCatalog();
 }
-
+ 
 function renderCatalog(){
   const placas   = catalog.filter(c => c.type !== 'perfil');
   const perfiles = catalog.filter(c => c.type === 'perfil');
-
+ 
   const renderItem = c => `
     <div class="cat-item">
       <div class="cat-ico">${c.emoji || '🔲'}</div>
@@ -1378,18 +1378,18 @@ function renderCatalog(){
       ${c.glbUrl ? `<a href="${c.glbUrl}" target="_blank" class="ibtn" style="width:24px;height:24px;font-size:.65rem" title="3D">🧊</a>` : ''}
       <button class="del-btn" onclick="deleteCat('${c.id}')">✕</button>
     </div>`;
-
+ 
   document.getElementById('catPiezas').innerHTML   = placas.length   ? placas.map(renderItem).join('')   : '<div class="empty" style="padding:14px 0">Sin placas.</div>';
   document.getElementById('catPerfiles').innerHTML = perfiles.length ? perfiles.map(renderItem).join('') : '<div class="empty" style="padding:14px 0">Sin perfiles.</div>';
 }
-
+ 
 function deleteCat(id){
   const c = catalog.find(x => x.id === id);
   if(!confirm(`¿Eliminar "${c?.code || id}"?`)) return;
   catalog = catalog.filter(x => x.id !== id);
   saveCatalog(); renderCatalog();
 }
-
+ 
 // ── HISTORIAL ──
 function renderHistory(){
   const list = document.getElementById('histList');
@@ -1414,7 +1414,7 @@ function renderHistory(){
     </div>`;
   }).join('');
 }
-
+ 
 function exportCSV(){
   const rows = [['Fecha','Almacén','Nave','Zona','Código_Pieza','Cantidad','Confianza','Tipo','Observaciones','Link_Foto']];
   history.forEach(e => e.pieces.forEach(p => rows.push([
@@ -1428,22 +1428,22 @@ function exportCSV(){
   a.download = 'strongforms_inventario_' + new Date().toISOString().slice(0, 10) + '.csv';
   a.click();
 }
-
+ 
 // ═══════════════════════════════════════════════════
 //  SISTEMA ADMIN — contraseña requerida
 //  Acceso: ?admin en URL  O  toque largo 5s en logo
 //  Las credenciales NUNCA se exponen al usuario normal
 // ═══════════════════════════════════════════════════
-
+ 
 // Contraseña por defecto la primera vez (obligar cambio)
 const DEFAULT_PW = 'strongforms2024';
-
+ 
 // Hash simple (no criptográfico pero suficiente para uso interno)
 async function hashPw(str){
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-
+ 
 // Cifrado XOR básico con contraseña como clave (ofusca las keys en localStorage)
 function xorCipher(text, key){
   let out = '';
@@ -1462,19 +1462,19 @@ function xorDecipher(enc, key){
     return out;
   } catch{ return ''; }
 }
-
+ 
 // Leer/escribir credenciales cifradas
 function getCred(name){ return xorDecipher(localStorage.getItem('sf4_c_'+name) || '', 'SF_SALT_2024'); }
 function setCred(name, val){ localStorage.setItem('sf4_c_'+name, xorCipher(val, 'SF_SALT_2024')); }
-
+ 
 // Obtener API key para uso en startAnalysis
 function getApiKey(){ return getCred('apikey'); }
 function getModel()  { return localStorage.getItem('sf4_model') || 'claude-sonnet-4-5'; }
-
+ 
 // Estado admin
 let adminAuthenticated = false;
 let adminHoldTimer = null;
-
+ 
 // ── TOQUE LARGO en logo (5 segundos) ──
 function startAdminHold(){
   adminHoldTimer = setTimeout(() => openAdminLogin(), 5000);
@@ -1482,12 +1482,12 @@ function startAdminHold(){
 function cancelAdminHold(){
   if(adminHoldTimer){ clearTimeout(adminHoldTimer); adminHoldTimer = null; }
 }
-
+ 
 // ── ACCESO POR URL ?admin ──
 if(location.search.includes('admin') || location.hash.includes('admin')){
   setTimeout(() => openAdminLogin(), 300);
 }
-
+ 
 // ── LOGIN ADMIN ──
 function openAdminLogin(){
   document.getElementById('adminPwIn').value = '';
@@ -1498,14 +1498,14 @@ function openAdminLogin(){
 function closeAdminLogin(){
   document.getElementById('adminLoginModal').classList.add('hidden');
 }
-
+ 
 async function checkAdminPw(){
   const entered = document.getElementById('adminPwIn').value.trim();
   if(!entered) return;
-
+ 
   const storedHash = localStorage.getItem('sf4_pwhash');
   let valid = false;
-
+ 
   if(!storedHash){
     // Primera vez en este dominio — solo acepta la contraseña por defecto
     valid = (entered === DEFAULT_PW);
@@ -1517,7 +1517,7 @@ async function checkAdminPw(){
     const enteredHash = await hashPw(entered);
     valid = (enteredHash === storedHash);
   }
-
+ 
   if(valid){
     adminAuthenticated = true;
     document.getElementById('adminLoginModal').classList.add('hidden');
@@ -1529,7 +1529,7 @@ async function checkAdminPw(){
     document.getElementById('adminPwIn').focus();
   }
 }
-
+ 
 // ── PANEL ADMIN ──
 function openAdmin(){
   // Rellenar campos con valores actuales
@@ -1541,19 +1541,19 @@ function openAdmin(){
   const locDef = JSON.parse(localStorage.getItem('sf4_locdef') || '{}');
   document.getElementById('admAlm').value  = locDef.alm  || '';
   document.getElementById('admNave').value = locDef.nave || '';
-
+ 
   updateAdminDriveUI();
-
+ 
   // Mostrar panel — usar flex explícito
   const panel = document.getElementById('adminPanel');
   panel.style.display = 'flex';
-
+ 
   // Limpiar ?admin de la URL sin recargar
   if(location.search.includes('admin')){
     history.replaceState(null, '', location.pathname + (location.hash.replace('#admin','') || ''));
   }
 }
-
+ 
 function closeAdmin(){
   document.getElementById('adminPanel').style.display = 'none';
   adminAuthenticated = false;
@@ -1562,18 +1562,18 @@ function closeAdmin(){
     window.history.replaceState(null, '', location.pathname);
   }
 }
-
+ 
 // ── CAMBIO CONTRASEÑA ──
 async function changePassword(){
   const cur    = document.getElementById('pwCurrent').value;
   const nw     = document.getElementById('pwNew').value;
   const rep    = document.getElementById('pwRepeat').value;
   const msg    = document.getElementById('pwMsg');
-
+ 
   const storedHash = localStorage.getItem('sf4_pwhash');
   const curHash    = await hashPw(cur);
   const isDefault  = !storedHash && cur === DEFAULT_PW;
-
+ 
   if(!isDefault && curHash !== storedHash){
     msg.textContent = '✕ Contraseña actual incorrecta.';
     msg.style.color = 'var(--red)';
@@ -1598,7 +1598,7 @@ async function changePassword(){
   document.getElementById('pwNew').value = '';
   document.getElementById('pwRepeat').value = '';
 }
-
+ 
 // ── GUARDAR API CLAUDE ──
 function saveApiCfg(){
   const key   = document.getElementById('admApiKey').value.trim();
@@ -1607,14 +1607,14 @@ function saveApiCfg(){
   localStorage.setItem('sf4_model', model);
   showAdminToast('✓ API Key y modelo guardados');
 }
-
+ 
 // ── GUARDAR GOOGLE CLIENT ID ──
 function saveGoogleCfg(){
   const cid = document.getElementById('admClientId').value.trim();
   setCred('clientid', cid);
   showAdminToast('✓ Client ID guardado');
 }
-
+ 
 // ── AUTH GOOGLE DESDE ADMIN ──
 function adminDriveAuth(){
   const cid = document.getElementById('admClientId').value.trim() || getCred('clientid');
@@ -1632,7 +1632,7 @@ function adminDriveAuth(){
     showAdminToast('✓ Google conectado correctamente');
   };
 }
-
+ 
 function updateAdminDriveUI(){
   const st = document.getElementById('admGoogleSt');
   const topSt = document.getElementById('adminDriveSt');
@@ -1644,7 +1644,7 @@ function updateAdminDriveUI(){
     if(topSt) topSt.innerHTML = '';
   }
 }
-
+ 
 // ── PLANO Y GRID DESDE ADMIN ──
 let adminPendingPlan = null;
 function handleAdminPlan(e){
@@ -1663,7 +1663,7 @@ function saveGridCfg(){
   buildGrid();
   showAdminToast('✓ Cuadrícula / plano guardados');
 }
-
+ 
 // ── UBICACIÓN POR DEFECTO ──
 function saveLocationDefaults(){
   const alm  = document.getElementById('admAlm').value.trim();
@@ -1674,7 +1674,7 @@ function saveLocationDefaults(){
   if(!document.getElementById('locNave').value) document.getElementById('locNave').value = nave;
   showAdminToast('✓ Ubicación por defecto guardada');
 }
-
+ 
 // ── ZONA PELIGROSA ──
 function clearHistory(){
   if(!confirm('¿Borrar todo el historial de escaneos? Irreversible.')) return;
@@ -1686,7 +1686,7 @@ function clearCatalog(){
   catalog = []; saveCatalog();
   showAdminToast('Catálogo borrado');
 }
-
+ 
 // ── TOAST ADMIN ──
 function showAdminToast(msg){
   let t = document.getElementById('adminToast');
@@ -1694,19 +1694,19 @@ function showAdminToast(msg){
   t.textContent = msg; t.style.opacity = '1';
   clearTimeout(t._to); t._to = setTimeout(() => t.style.opacity = '0', 2500);
 }
-
+ 
 // ── updateDriveUI (pill en topbar — solo visible si hay token) ──
 function updateDriveUI(){
   const pill = document.getElementById('drivePill');
   if(oauthToken) pill.classList.remove('hidden');
   else pill.classList.add('hidden');
 }
-
+ 
 // ── openSettings stub (ya no se usa pero evita errores si quedó alguna referencia) ──
 function openSettings(){ openAdminLogin(); }
 function closeSettings(){ closeAdminLogin(); }
 function saveSettings(){}
-
+ 
 // Parsear token del hash tras redirect OAuth
 if(location.hash.includes('access_token')){
   const p = new URLSearchParams(location.hash.slice(1));
@@ -1717,7 +1717,7 @@ if(location.hash.includes('access_token')){
     else updateDriveUI();
   }
 }
-
+ 
 // ── RESET ──
 function resetScan(){
   images = []; resolved = []; queue = []; current = null; currentScan = null; selCell = null;
@@ -1732,7 +1732,7 @@ function resetScan(){
   document.getElementById('bc').innerHTML = '<span style="color:var(--text3);font-size:.7rem">Sin seleccionar</span>';
   document.getElementById('selLbl').textContent = '';
 }
-
+ 
 // ── HELPERS ──
 function findCatId(name){
   return catalog.find(c =>
@@ -1740,7 +1740,7 @@ function findCatId(name){
     (c.alias && c.alias.toLowerCase() === name.toLowerCase())
   )?.id || null;
 }
-
+ 
 function guessEmoji(name, type){
   if(type === 'perfil') return '🔩';
   const n = (name || '').toLowerCase();
@@ -1751,10 +1751,10 @@ function guessEmoji(name, type){
   if(n.includes('pasador') || n.includes('clamp') || n.includes('tornillo')) return '🔩';
   return '🟫';
 }
-
+ 
 function saveCatalog(){ localStorage.setItem('sf4_cat',  JSON.stringify(catalog)); }
 function saveHistory() { localStorage.setItem('sf4_hist', JSON.stringify(history)); }
-
+ 
 // ── INIT ──
 updateDriveUI();
 buildGrid();
