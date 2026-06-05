@@ -415,7 +415,7 @@ input[type=file]{display:none}
 <!-- ══════════════════════════════
      MODAL: IDENTIFICAR PIEZA
 ══════════════════════════════ -->
-<div id="identModal" class="mbd hidden">
+<div id="identModal" class="mbd" style="display:none">
 <div class="modal">
   <h3 id="identTitle">Identificar pieza</h3>
   <p id="identDesc"></p>
@@ -457,7 +457,7 @@ input[type=file]{display:none}
 <!-- ══════════════════════════════
      MODAL: NUEVA PIEZA CATÁLOGO
 ══════════════════════════════ -->
-<div id="catModal" class="mbd hidden">
+<div id="catModal" class="mbd" style="display:none">
 <div class="modal">
   <h3 id="catMTitle">Nueva pieza</h3>
   <p>Define la pieza para el catálogo de reconocimiento.</p>
@@ -533,7 +533,7 @@ input[type=file]{display:none}
 <!-- ══════════════════════════════
      MODAL: PLANO
 ══════════════════════════════ -->
-<div id="planModal" class="mbd hidden">
+<div id="planModal" class="mbd" style="display:none">
 <div class="modal">
   <h3>Plano de nave</h3>
   <p>Imagen de fondo opcional para la cuadrícula de ubicaciones.</p>
@@ -1034,7 +1034,7 @@ function openIdentModal(item){
   document.getElementById('aiCountHint').textContent = item.count;
   document.getElementById('pieceAliasIn').value = '';
 
-  document.getElementById('identModal').classList.remove('hidden');
+  document.getElementById('identModal').style.display='flex';
   setTimeout(() => document.getElementById('pieceNameIn').focus(), 150);
 }
 
@@ -1067,7 +1067,7 @@ function confirmPiece(){
   }
 
   resolved.push({id, name, count, confidence: 1.0, type: current.type});
-  document.getElementById('identModal').classList.add('hidden');
+  document.getElementById('identModal').style.display='none';
   current = null;
   nextUnknown();
 }
@@ -1076,7 +1076,7 @@ function skipPiece(){
   // Aún en modo skip, usamos la cantidad que el usuario haya escrito
   const count = parseInt(document.getElementById('pieceCountIn').value) || current.count;
   resolved.push({id: null, name: current.label + ' ⚠', count, confidence: current.confidence});
-  document.getElementById('identModal').classList.add('hidden');
+  document.getElementById('identModal').style.display='none';
   current = null;
   nextUnknown();
 }
@@ -1087,7 +1087,7 @@ function handleExtraPhoto(e){
   resize(f, (b64, url) => {
     images.push({base64: b64, dataUrl: url});
     renderThumbs();
-    document.getElementById('identModal').classList.add('hidden');
+    document.getElementById('identModal').style.display='none';
     queue = []; resolved = []; current = null;
     startAnalysis();
   });
@@ -1172,8 +1172,8 @@ function updateBC(){
     <span class="bc-item">${zona}</span>`;
 }
 
-function openPlanModal(){ document.getElementById('planModal').classList.remove('hidden'); }
-function closePlanModal(){ document.getElementById('planModal').classList.add('hidden'); }
+function openPlanModal(){ document.getElementById('planModal').style.display = 'flex'; }
+function closePlanModal(){ document.getElementById('planModal').style.display = 'none'; }
 let pendingPlan = null;
 function handlePlan(e){ const f = e.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = ev => pendingPlan = ev.target.result; r.readAsDataURL(f); e.target.value = ''; }
 function applyPlan(){
@@ -1323,9 +1323,9 @@ function openCatModal(){
   document.getElementById('cRenderPreview').classList.add('hidden');
   pendingRender = null;
   setCatType('placa');
-  document.getElementById('catModal').classList.remove('hidden');
+  document.getElementById('catModal').style.display='flex';
 }
-function closeCatModal(){ document.getElementById('catModal').classList.add('hidden'); pendingRender = null; }
+function closeCatModal(){ document.getElementById('catModal').style.display='none'; pendingRender = null; }
 
 function handleRender(e){
   const f = e.target.files[0]; if(!f) return;
