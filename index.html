@@ -1521,18 +1521,25 @@ function checkAdminPw(){
 
 // ── PANEL ADMIN ──
 function openAdmin(){
-  document.getElementById('admApiKey').value   = getCred('apikey');
-  document.getElementById('admModel').value    = getModel();
-  document.getElementById('admClientId').value = getCred('clientid');
-  document.getElementById('admCols').value     = gridCfg.cols || 8;
-  document.getElementById('admRows').value     = gridCfg.rows || 6;
-  const locDef = JSON.parse(localStorage.getItem('sf4_locdef') || '{}');
-  document.getElementById('admAlm').value  = locDef.alm  || '';
-  document.getElementById('admNave').value = locDef.nave || '';
-  updateAdminDriveUI();
-  document.getElementById('adminPanel').style.display = 'flex';
-  if(location.search.includes('admin')){
-    window.history.replaceState(null, '', location.pathname);
+  try {
+    var panel = document.getElementById('adminPanel');
+    panel.style.display = 'flex';
+
+    // Rellenar campos — con try individual para que un error no bloquee el panel
+    try { document.getElementById('admApiKey').value   = getCred('apikey'); } catch(e){}
+    try { document.getElementById('admModel').value    = getModel(); } catch(e){}
+    try { document.getElementById('admClientId').value = getCred('clientid'); } catch(e){}
+    try { document.getElementById('admCols').value     = gridCfg.cols || 8; } catch(e){}
+    try { document.getElementById('admRows').value     = gridCfg.rows || 6; } catch(e){}
+    try {
+      var locDef = JSON.parse(localStorage.getItem('sf4_locdef') || '{}');
+      document.getElementById('admAlm').value  = locDef.alm  || '';
+      document.getElementById('admNave').value = locDef.nave || '';
+    } catch(e){}
+    try { updateAdminDriveUI(); } catch(e){}
+
+  } catch(e) {
+    alert('Error abriendo admin: ' + e.message);
   }
 }
 
