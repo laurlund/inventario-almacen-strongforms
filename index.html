@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Strongforms · Inventario</title>
-<meta name="version" content="v4.3">
+<meta name="version" content="v4.4">
 <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600&family=Epilogue:wght@700;900&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════
@@ -254,7 +254,7 @@ input[type=file]{display:none}
 <!-- ═══ TOPBAR ═══ -->
 <div class="topbar">
   <div class="logo" id="logoBtn">
-    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.3</span>
+    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.4</span>
   </div>
   <div class="pill hidden" id="drivePill"><div class="dot"></div><span id="drivePillTxt">Drive ✓</span></div>
 </div>
@@ -1645,19 +1645,49 @@ function updateAdminDriveUI(){
 let adminPendingPlan = null;
 function handleAdminPlan(e){
   const f = e.target.files[0]; if(!f) return;
+  // Comprimir a max 800px para que quepa en localStorage
   const r = new FileReader();
-  r.onload = ev => adminPendingPlan = ev.target.result;
-  r.readAsDataURL(f); e.target.value = '';
+  r.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.naturalWidth, h = img.naturalHeight;
+      const MAX = 800;
+      if(w > MAX || h > MAX){
+        if(w >= h){ h = Math.round(h * MAX / w); w = MAX; }
+        else      { w = Math.round(w * MAX / h); h = MAX; }
+      }
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      adminPendingPlan = c.toDataURL('image/jpeg', 0.75);
+      showAdminToast('✓ Plano cargado — pulsa Guardar');
+    };
+    img.src = ev.target.result;
+  };
+  r.readAsDataURL(f);
+  // NO limpiar el input aquí — limpiar después de leer
 }
 function saveGridCfg(){
+  if(!adminPendingPlan && !gridCfg.planImg){
+    showAdminToast('⚠ Selecciona primero una imagen de plano');
+  }
   gridCfg = {
-    cols: parseInt(document.getElementById('admCols').value) || 8,
-    rows: parseInt(document.getElementById('admRows').value) || 6,
+    cols: parseInt(document.getElementById('admCols').value) || 5,
+    rows: parseInt(document.getElementById('admRows').value) || 7,
     planImg: adminPendingPlan || gridCfg.planImg
   };
-  localStorage.setItem('sf4_grid', JSON.stringify(gridCfg));
-  buildGrid();
-  showAdminToast('✓ Cuadrícula / plano guardados');
+  try {
+    localStorage.setItem('sf4_grid', JSON.stringify(gridCfg));
+    buildGrid();
+    showAdminToast('✓ Cuadrícula / plano guardados');
+  } catch(e) {
+    // localStorage lleno — guardar sin imagen
+    gridCfg.planImg = null;
+    adminPendingPlan = null;
+    localStorage.setItem('sf4_grid', JSON.stringify(gridCfg));
+    buildGrid();
+    showAdminToast('⚠ Imagen demasiado grande para guardar. Usa una más pequeña.');
+  }
 }
 
 // ── UBICACIÓN POR DEFECTO ──
