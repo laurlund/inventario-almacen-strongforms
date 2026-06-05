@@ -251,11 +251,9 @@ input[type=file]{display:none}
 
 <!-- ═══ TOPBAR ═══ -->
 <div class="topbar">
-  <!-- Logo: toque largo 5s → abre acceso admin (invisible para Marcos) -->
-  <div class="logo" id="logoBtn" onmousedown="startAdminHold()" ontouchstart="startAdminHold()" onmouseup="cancelAdminHold()" ontouchend="cancelAdminHold()">
+  <div class="logo" id="logoBtn">
     Strongforms <span>Inventario · Almacén</span>
   </div>
-  <!-- Pill solo visible cuando admin ha conectado Drive en esta sesión -->
   <div class="pill hidden" id="drivePill"><div class="dot"></div><span id="drivePillTxt">Drive ✓</span></div>
 </div>
 
@@ -1477,15 +1475,6 @@ function getModel()  { return localStorage.getItem('sf4_model') || 'claude-sonne
 
 // Estado admin
 let adminAuthenticated = false;
-let adminHoldTimer = null;
-
-// ── TOQUE LARGO en logo (5 segundos) ──
-function startAdminHold(){
-  adminHoldTimer = setTimeout(() => openAdminLogin(), 5000);
-}
-function cancelAdminHold(){
-  if(adminHoldTimer){ clearTimeout(adminHoldTimer); adminHoldTimer = null; }
-}
 
 // ── ACCESO POR URL ?admin — deshabilitado, usar botón fijo ──
 
