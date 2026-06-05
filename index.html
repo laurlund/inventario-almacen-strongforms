@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Strongforms · Inventario</title>
+<meta name="version" content="v4.2">
 <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600&family=Epilogue:wght@700;900&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════
@@ -253,7 +254,7 @@ input[type=file]{display:none}
 <!-- ═══ TOPBAR ═══ -->
 <div class="topbar">
   <div class="logo" id="logoBtn">
-    Strongforms <span>Inventario · Almacén</span>
+    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.2</span>
   </div>
   <div class="pill hidden" id="drivePill"><div class="dot"></div><span id="drivePillTxt">Drive ✓</span></div>
 </div>
@@ -286,7 +287,7 @@ input[type=file]{display:none}
       <div style="font-size:.58rem;opacity:.45;margin-top:1px">Cámara · Galería</div>
     </div>
     <img id="prevImg" class="hidden" alt="">
-    <div class="loading-ov hidden" id="loadOv">
+    <div class="loading-ov" id="loadOv" style="display:none">
       <div class="spinner"></div>
       <span id="loadMsg">Analizando…</span>
     </div>
@@ -1465,17 +1466,23 @@ function xorDecipher(enc, key){
 }
 
 // Leer/escribir credenciales cifradas
-function getCred(name){ return xorDecipher(localStorage.getItem('sf4_c_'+name) || '', 'SF_SALT_2024'); }
-function setCred(name, val){ localStorage.setItem('sf4_c_'+name, xorCipher(val, 'SF_SALT_2024')); }
+function getCred(name){
+  try{ return atob(localStorage.getItem('sf4_c_'+name) || ''); } catch(e){ return ''; }
+}
+function setCred(name, val){
+  try{ localStorage.setItem('sf4_c_'+name, btoa(unescape(encodeURIComponent(val)))); } catch(e){}
+}
 
 // Obtener API key para uso en startAnalysis
 function getApiKey(){ return getCred('apikey'); }
 function getModel()  { return localStorage.getItem('sf4_model') || 'claude-sonnet-4-5'; }
 
 // ── CONTRASEÑA ADMIN — simple y directo ──
-function savePw(pw){ localStorage.setItem('sf4_pw', btoa(pw)); }
-function checkPw(pw){ 
-  try { return atob(localStorage.getItem('sf4_pw') || '') === pw; } 
+function savePw(pw){
+  try{ localStorage.setItem('sf4_pw', btoa(unescape(encodeURIComponent(pw)))); } catch(e){}
+}
+function checkPw(pw){
+  try{ return decodeURIComponent(escape(atob(localStorage.getItem('sf4_pw') || ''))) === pw; }
   catch(e){ return false; }
 }
 function hasPw(){ return !!localStorage.getItem('sf4_pw'); }
@@ -1503,11 +1510,16 @@ function checkAdminPw(){
   let valid = false;
 
   if(!hasPw()){
-    // Primera vez — acepta contraseña por defecto y la guarda
     valid = (entered === DEFAULT_PW);
     if(valid) savePw(DEFAULT_PW);
   } else {
     valid = checkPw(entered);
+    // Fallback: si hay hash corrupto de versión anterior y entra con DEFAULT_PW
+    if(!valid && entered === DEFAULT_PW){
+      localStorage.removeItem('sf4_pw');
+      valid = true;
+      savePw(DEFAULT_PW);
+    }
   }
 
   if(valid){
