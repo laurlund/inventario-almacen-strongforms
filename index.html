@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Strongforms · Inventario</title>
-<meta name="version" content="v4.4">
+<meta name="version" content="v4.5">
 <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600&family=Epilogue:wght@700;900&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════
@@ -254,7 +254,7 @@ input[type=file]{display:none}
 <!-- ═══ TOPBAR ═══ -->
 <div class="topbar">
   <div class="logo" id="logoBtn">
-    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.4</span>
+    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.5</span>
   </div>
   <div class="pill hidden" id="drivePill"><div class="dot"></div><span id="drivePillTxt">Drive ✓</span></div>
 </div>
@@ -653,6 +653,7 @@ input[type=file]{display:none}
           <button class="btn btn-ghost" onclick="saveGoogleCfg()">Guardar Client ID</button>
           <button class="btn btn-blue" onclick="adminDriveAuth()">🔑 Conectar Google</button>
         </div>
+        <button class="btn btn-ghost btn-full" style="margin-bottom:11px" onclick="pullConfigFromSheet().then(ok=>showAdminToast(ok?'✓ Config cargada desde Sheets':'⚠ No hay config en Sheets aún'))">☁ Cargar config desde Sheets</button>
         <div style="font-size:.6rem;color:var(--text3);line-height:1.9;background:var(--s2);padding:8px 10px;border-radius:6px;border:1px solid var(--border)">
           Sheet: <span style="color:var(--blue)">Strongforms_Inventario_BD</span><br>
           Fotos: <span style="color:var(--blue)">98_BD_IA / FOTOS / AAAA-MM /</span><br>
@@ -1588,6 +1589,7 @@ function changePassword(){
     msg.style.color = 'var(--red)'; msg.style.display = 'block'; return;
   }
   savePw(nw);
+  pushConfigToSheet();
   msg.textContent = '✓ Contraseña cambiada correctamente.';
   msg.style.color = 'var(--green)'; msg.style.display = 'block';
   document.getElementById('pwCurrent').value = '';
@@ -1601,6 +1603,7 @@ function saveApiCfg(){
   const model = document.getElementById('admModel').value;
   setCred('apikey', key);
   localStorage.setItem('sf4_model', model);
+  pushConfigToSheet();
   showAdminToast('✓ API Key y modelo guardados');
 }
 
@@ -1608,6 +1611,7 @@ function saveApiCfg(){
 function saveGoogleCfg(){
   const cid = document.getElementById('admClientId').value.trim();
   setCred('clientid', cid);
+  pushConfigToSheet();
   showAdminToast('✓ Client ID guardado');
 }
 
@@ -1678,6 +1682,7 @@ function saveGridCfg(){
   };
   try {
     localStorage.setItem('sf4_grid', JSON.stringify(gridCfg));
+    pushConfigToSheet();
     buildGrid();
     showAdminToast('✓ Cuadrícula / plano guardados');
   } catch(e) {
@@ -1695,6 +1700,7 @@ function saveLocationDefaults(){
   const alm  = document.getElementById('admAlm').value.trim();
   const nave = document.getElementById('admNave').value.trim();
   localStorage.setItem('sf4_locdef', JSON.stringify({alm, nave}));
+  pushConfigToSheet();
   // Aplicar en campos del scan si están vacíos
   if(!document.getElementById('locAlm').value) document.getElementById('locAlm').value = alm;
   if(!document.getElementById('locNave').value) document.getElementById('locNave').value = nave;
@@ -1778,20 +1784,116 @@ function guessEmoji(name, type){
   return '🟫';
 }
 
-function saveCatalog(){ localStorage.setItem('sf4_cat',  JSON.stringify(catalog)); }
+function saveCatalog(){ 
+  localStorage.setItem('sf4_cat', JSON.stringify(catalog)); 
+  pushConfigToSheet();
+}
 function saveHistory() { localStorage.setItem('sf4_hist', JSON.stringify(history)); }
 
-// ── INIT ──
-updateDriveUI();
-buildGrid();
-// Cargar ubicación por defecto configurada por admin
-const _locDef = JSON.parse(localStorage.getItem('sf4_locdef') || '{}');
-if(_locDef.alm)  document.getElementById('locAlm').value  = _locDef.alm;
-if(_locDef.nave) document.getElementById('locNave').value = _locDef.nave;
-// Aviso si no hay API Key configurada (solo visible en nota discreta)
-if(!getApiKey()){
-  setTimeout(() => showBar('noteBar', '⚠ Sin API Key configurada. Accede al panel admin para configurarla.'), 800);
+// ═══════════════════════════════════════════════════
+//  SINCRONIZACIÓN CONFIG ↔ GOOGLE SHEETS
+//  Pestaña CONFIG en el Sheet — fuente única de verdad
+//  Se carga al arrancar si hay token OAuth
+//  Se guarda cada vez que el admin modifica algo
+// ═══════════════════════════════════════════════════
+
+const CONFIG_RANGE = 'CONFIG!A:B';
+
+// Subir config completa al Sheet
+async function pushConfigToSheet(){
+  if(!oauthToken) return;
+  const cfg = [
+    ['apikey',      getCred('apikey')],
+    ['model',       getModel()],
+    ['clientid',    getCred('clientid')],
+    ['pw',          localStorage.getItem('sf4_pw') || ''],
+    ['grid_cols',   String(gridCfg.cols || 5)],
+    ['grid_rows',   String(gridCfg.rows || 7)],
+    ['grid_plan',   gridCfg.planImg || ''],
+    ['loc_alm',     JSON.parse(localStorage.getItem('sf4_locdef')||'{}').alm  || ''],
+    ['loc_nave',    JSON.parse(localStorage.getItem('sf4_locdef')||'{}').nave || ''],
+    ['catalog',     localStorage.getItem('sf4_cat')  || '[]'],
+  ];
+  try {
+    // Limpiar y reescribir la pestaña CONFIG
+    await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/CONFIG!A:B:clear`, {
+      method: 'POST', headers: { Authorization: 'Bearer ' + oauthToken }
+    });
+    await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/CONFIG!A1:append?valueInputOption=RAW`, {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + oauthToken, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ values: cfg })
+    });
+    showAdminToast('✓ Configuración sincronizada con Sheets');
+  } catch(e) { showAdminToast('⚠ Error sincronizando con Sheets'); }
 }
+
+// Descargar config desde el Sheet y aplicar
+async function pullConfigFromSheet(){
+  if(!oauthToken) return false;
+  try {
+    const r = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/CONFIG!A:B`,
+      { headers: { Authorization: 'Bearer ' + oauthToken } }
+    );
+    const d = await r.json();
+    if(!d.values || d.values.length < 2) return false;
+
+    const cfg = {};
+    d.values.forEach(row => { if(row[0]) cfg[row[0]] = row[1] || ''; });
+
+    // Aplicar cada valor si existe
+    if(cfg.apikey)    { localStorage.setItem('sf4_c_apikey',    btoa(unescape(encodeURIComponent(cfg.apikey)))); }
+    if(cfg.model)     { localStorage.setItem('sf4_model',       cfg.model); }
+    if(cfg.clientid)  { localStorage.setItem('sf4_c_clientid',  btoa(unescape(encodeURIComponent(cfg.clientid)))); }
+    if(cfg.pw)        { localStorage.setItem('sf4_pw',          cfg.pw); }
+    if(cfg.grid_cols || cfg.grid_rows) {
+      const existing = JSON.parse(localStorage.getItem('sf4_grid') || '{}');
+      gridCfg = {
+        cols:    parseInt(cfg.grid_cols)  || existing.cols  || 5,
+        rows:    parseInt(cfg.grid_rows)  || existing.rows  || 7,
+        planImg: cfg.grid_plan || existing.planImg || null
+      };
+      localStorage.setItem('sf4_grid', JSON.stringify(gridCfg));
+    }
+    if(cfg.loc_alm || cfg.loc_nave) {
+      localStorage.setItem('sf4_locdef', JSON.stringify({ alm: cfg.loc_alm || '', nave: cfg.loc_nave || '' }));
+    }
+    if(cfg.catalog && cfg.catalog !== '[]') {
+      try {
+        const parsed = JSON.parse(cfg.catalog);
+        if(Array.isArray(parsed) && parsed.length > 0){
+          catalog = parsed;
+          localStorage.setItem('sf4_cat', cfg.catalog);
+        }
+      } catch(e){}
+    }
+    return true;
+  } catch(e) { return false; }
+}
+
+// ── INIT ──
+(async function init(){
+  updateDriveUI();
+
+  // Si hay token, intentar cargar config desde Sheets primero
+  if(oauthToken){
+    const loaded = await pullConfigFromSheet();
+    if(loaded) console.log('[SF] Config cargada desde Sheets');
+  }
+
+  buildGrid();
+
+  // Cargar ubicación por defecto
+  const _locDef = JSON.parse(localStorage.getItem('sf4_locdef') || '{}');
+  if(_locDef.alm)  document.getElementById('locAlm').value  = _locDef.alm;
+  if(_locDef.nave) document.getElementById('locNave').value = _locDef.nave;
+
+  // Aviso si no hay API Key
+  if(!getApiKey()){
+    setTimeout(() => showBar('noteBar', '⚠ Sin API Key. Abre el panel ⚙ Admin para configurarla.'), 800);
+  }
+})();
 </script>
 </body>
 </html>
