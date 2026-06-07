@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Strongforms · Inventario</title>
-<meta name="version" content="v4.8">
+<meta name="version" content="v4.9">
 <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600&family=Epilogue:wght@700;900&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════
@@ -245,7 +245,7 @@ input[type=file]{display:none}
 .empty{text-align:center;color:var(--text3);font-size:.7rem;letter-spacing:1px;text-transform:uppercase;padding:32px 0;line-height:2}
 
 /* Botón admin fijo — discreto, solo visible si sabes que está */
-.admin-fab{position:fixed;bottom:14px;right:14px;padding:7px 13px;border-radius:20px;background:var(--s1);border:2px solid var(--border2);color:var(--text2);font-size:.62rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:5px;z-index:100;transition:all .2s;font-family:var(--mono);box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.admin-fab{position:fixed;bottom:14px;right:14px;padding:7px 13px;border-radius:20px;background:var(--s1);border:2px solid var(--border2);color:var(--text2);font-size:.62rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:5px;z-index:400;transition:all .2s;font-family:var(--mono);box-shadow:0 2px 8px rgba(0,0,0,.12)}
 .admin-fab:hover{border-color:var(--blue);color:var(--blue);box-shadow:0 2px 12px rgba(26,95,180,.2)}
 </style>
 </head>
@@ -254,7 +254,7 @@ input[type=file]{display:none}
 <!-- ═══ TOPBAR ═══ -->
 <div class="topbar">
   <div class="logo" id="logoBtn">
-    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.8</span>
+    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.9</span>
   </div>
   <div class="pill hidden" id="drivePill"><div class="dot"></div><span id="drivePillTxt">Drive ✓</span></div>
 </div>
@@ -725,7 +725,7 @@ input[type=file]{display:none}
 </div>
 
 <!-- Botón admin fijo — visible para ti, discreto para Marcos -->
-<button class="admin-fab" onclick="openAdminLogin()" title="Panel administrador">⚙ Admin</button>
+<button class="admin-fab" id="adminFab" title="Panel administrador">⚙ Admin</button>
 
 <script>
 // ── DRIVE / SHEETS IDs (hardcoded) ──
@@ -1964,6 +1964,16 @@ async function pullConfigFromSheet(){
 
 // ── INIT ──
 (async function init(){
+  // Listener del botón admin — añadido via JS para máxima fiabilidad
+  document.getElementById('adminFab').addEventListener('click', function(e){
+    e.stopPropagation();
+    openAdminLogin();
+  });
+  document.getElementById('adminFab').addEventListener('touchend', function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    openAdminLogin();
+  });
   updateDriveUI();
 
   // Si hay token, intentar cargar config desde Sheets primero
