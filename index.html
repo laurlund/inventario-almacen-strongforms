@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Strongforms · Inventario</title>
-<meta name="version" content="v4.11">
+<meta name="version" content="v4.12">
 <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600&family=Epilogue:wght@700;900&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════
@@ -254,7 +254,7 @@ input[type=file]{display:none}
 <!-- ═══ TOPBAR ═══ -->
 <div class="topbar">
   <div class="logo" id="logoBtn">
-    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.11</span>
+    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.12</span>
   </div>
   <div class="pill hidden" id="drivePill"><div class="dot"></div><span id="drivePillTxt">Drive ✓</span></div>
 </div>
@@ -1146,10 +1146,9 @@ function buildGrid(){
     }
   }
 
-  if(gridCfg.planImg){
-    document.getElementById('planBg').src = gridCfg.planImg;
-    document.getElementById('planBg').classList.remove('hidden');
-  }
+  var planSrc = gridCfg.planImg || 'https://drive.google.com/uc?export=view&id=1QZS0Vs8tGyq1lEjCrIoA5j4lmqJezQXd';
+  document.getElementById('planBg').src = planSrc;
+  document.getElementById('planBg').classList.remove('hidden');
 
   if(selCell){
     const ex = ovl.querySelector(`[data-col="${selCell.col}"][data-row="${selCell.row}"]`);
@@ -1690,8 +1689,14 @@ function handleAdminPlan(e){
   // NO limpiar el input aquí — limpiar después de leer
 }
 function saveGridCfg(){
+  // Si no hay imagen local, usar el plano de Drive por defecto
   if(!adminPendingPlan && !gridCfg.planImg){
-    showAdminToast('⚠ Selecciona primero una imagen de plano');
+    gridCfg = { cols: parseInt(document.getElementById('admCols').value)||5, rows: parseInt(document.getElementById('admRows').value)||7, planImg: null };
+    localStorage.setItem('sf4_grid', JSON.stringify(gridCfg));
+    buildGrid();
+    showAdminToast('Cuadricula guardada con plano de Drive');
+    pushConfigToSheet();
+    return;
   }
   gridCfg = {
     cols: parseInt(document.getElementById('admCols').value) || 5,
