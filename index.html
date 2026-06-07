@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Strongforms · Inventario</title>
-<meta name="version" content="v4.7">
+<meta name="version" content="v4.8">
 <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600&family=Epilogue:wght@700;900&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════
@@ -254,7 +254,7 @@ input[type=file]{display:none}
 <!-- ═══ TOPBAR ═══ -->
 <div class="topbar">
   <div class="logo" id="logoBtn">
-    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.7</span>
+    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.8</span>
   </div>
   <div class="pill hidden" id="drivePill"><div class="dot"></div><span id="drivePillTxt">Drive ✓</span></div>
 </div>
@@ -608,8 +608,10 @@ input[type=file]{display:none}
           <button class="btn btn-blue" onclick="adminDriveAuth()">🔑 Conectar Google</button>
         </div>
         <div class="brow" style="padding:0;margin-top:6px">
-          <button class="btn btn-ghost" style="flex:1" onclick="loadConfigFromSheets()">☁ Cargar desde Sheets</button>
-          <button class="btn btn-acc" style="flex:1" onclick="pushConfigToSheet().then(()=>{ document.getElementById('syncStatus').className='chip chip-ok'; document.getElementById('syncStatus').textContent='✓ Subido'; })">⬆ Subir al Sheet</button>
+          <button class="btn btn-blue btn-full" onclick="pushConfigToSheet()">⬆ Guardar config en Sheets</button>
+        </div>
+        <div class="brow" style="padding:0;margin-top:6px">
+          <button class="btn btn-ghost btn-full" onclick="loadConfigFromSheets()">☁ Cargar config desde Sheets</button>
         </div>
       </div>
     </div>
@@ -1848,6 +1850,47 @@ async function loadConfigFromSheets(){
 }
 
 // ── SUBIR CONFIG COMPLETA AL SHEET ──
+async function pushConfigToSheet(){
+  if(!oauthToken) return;
+  const cfg = [
+    ['apikey',     getCred('apikey')],
+    ['model',      getModel()],
+    ['clientid',   getCred('clientid')],
+    ['pw',         localStorage.getItem('sf4_pw') || ''],
+    ['grid_cols',  String(gridCfg.cols || 5)],
+    ['grid_rows',  String(gridCfg.rows || 7)],
+    ['grid_plan',  gridCfg.planImg || ''],
+    ['loc_alm',    JSON.parse(localStorage.getItem('sf4_locdef')||'{}').alm  || ''],
+    ['loc_nave',   JSON.parse(localStorage.getItem('sf4_locdef')||'{}').nave || ''],
+    ['catalog',    localStorage.getItem('sf4_cat') || '[]'],
+  ];
+  try {
+    // 1. Asegurar que la pestaña CONFIG existe
+    await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}:batchUpdate`, {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + oauthToken, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ requests: [{ addSheet: { properties: { title: 'CONFIG' } } }] })
+    }); // Si ya existe devuelve error — lo ignoramos
+
+    // 2. Limpiar contenido anterior
+    await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/CONFIG!A:B:clear`, {
+      method: 'POST', headers: { Authorization: 'Bearer ' + oauthToken }
+    });
+
+    // 3. Escribir config
+    const r = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/CONFIG!A1?valueInputOption=RAW`, {
+      method: 'PUT',
+      headers: { Authorization: 'Bearer ' + oauthToken, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ values: cfg })
+    });
+    const d = await r.json();
+    if(d.error) throw new Error(d.error.message);
+    showAdminToast('✓ Config subida al Sheet correctamente');
+  } catch(e) {
+    console.error('pushConfigToSheet error:', e);
+    showAdminToast('⚠ Error subiendo config: ' + e.message);
+  }
+}
   if(!oauthToken) return;
   const cfg = [
     ['apikey',      getCred('apikey')],
