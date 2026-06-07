@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Strongforms · Inventario</title>
-<meta name="version" content="v4.13">
+<meta name="version" content="v4.14">
 <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600&family=Epilogue:wght@700;900&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════
@@ -254,7 +254,7 @@ input[type=file]{display:none}
 <!-- ═══ TOPBAR ═══ -->
 <div class="topbar">
   <div class="logo" id="logoBtn">
-    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.13</span>
+    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.14</span>
   </div>
   <div class="pill hidden" id="drivePill"><div class="dot"></div><span id="drivePillTxt">Drive ✓</span></div>
 </div>
@@ -729,11 +729,10 @@ input[type=file]{display:none}
 <button class="admin-fab" id="adminFab" title="Panel administrador">⚙ Admin</button>
 
 <script>
-// ── DRIVE / SHEETS IDs (hardcoded) ──
-const DRIVE_ROOT   = '1yZ1J1bjsM2oqIsEkf7IO-XS_LWGJYBUB';
-const DRIVE_FOTOS  = '1zkBtfb3eQcTwItMTcxmyuMDqsc_R7E-I';
-const DRIVE_FICHAS = '1sIKgD_BFsEgoabwhXBMzn5qOJg1e-5gl';
-const SHEET_ID     = '1mGEYiK2n9CqKBbFZCDKznE7-tYB_uZ0WTmzlz5TdmOo';
+// ── APPS SCRIPT — fuente única de verdad (sin OAuth) ──
+const SCRIPT_URL  = 'https://script.google.com/macros/s/AKfycbxmKzNVa67SJMOelA-cdUE0oeaVNLr2h9KnvJwhfna5XvK1R9BckKScLaFllmpOpjm-Ug/exec';
+const DRIVE_FOTOS = '1zkBtfb3eQcTwItMTcxmyuMDqsc_R7E-I';
+const PLAN_URL_DEFAULT = 'https://drive.google.com/uc?export=view&id=1QZS0Vs8tGyq1lEjCrIoA5j4lmqJezQXd';
 
 // ── STATE ──
 let catalog     = JSON.parse(localStorage.getItem('sf4_cat')  || '[]');
