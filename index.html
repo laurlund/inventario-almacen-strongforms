@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Strongforms · Inventario</title>
-<meta name="version" content="v4.17">
+<meta name="version" content="v4.18">
 <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600&family=Epilogue:wght@700;900&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════
@@ -254,7 +254,7 @@ input[type=file]{display:none}
 <!-- ═══ TOPBAR ═══ -->
 <div class="topbar">
   <div class="logo" id="logoBtn">
-    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.17</span>
+    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.18</span>
   </div>
   <div class="pill hidden" id="drivePill"><div class="dot"></div><span id="drivePillTxt">Drive ✓</span></div>
 </div>
@@ -849,6 +849,24 @@ function resetResult(){
 }
 
 // ── ANÁLISIS ──
+
+// Descarga SVG de Drive y devuelve el XML como string (max 3000 chars)
+async function fetchSVG(url){
+  try {
+    // Convertir URL de Drive a URL de descarga directa
+    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if(!match) return null;
+    const id = match[1];
+    const directUrl = 'https://drive.google.com/uc?export=download&id=' + id;
+    const r = await fetch(directUrl);
+    if(!r.ok) return null;
+    const text = await r.text();
+    // Extraer solo la parte relevante del SVG (paths y dimensiones)
+    // Limitar a 2500 chars para no saturar el contexto
+    return text.slice(0, 2500);
+  } catch(e){ return null; }
+}
+
 async function startAnalysis(){
   const key = getApiKey();
   if(!key){
@@ -857,15 +875,35 @@ async function startAnalysis(){
   }
   if(!images.length) return;
 
-  setLoad(true, 'Analizando imagen…');
+  setLoad(true, 'Cargando referencias del catálogo…');
   document.getElementById('analyzeBtn').disabled = true;
   resolved = [];
 
-  // Renders del catálogo como referencia visual
+  // Renders del catálogo como referencia visual (imágenes base64)
   const refBlocks = catalog
     .filter(c => c.renderB64)
     .slice(0, 4)
     .map(c => ({type:'image', source:{type:'base64', media_type:'image/jpeg', data:c.renderB64}}));
+
+  // Descargar SVGs del catálogo para contexto geométrico
+  // Solo los primeros 6 para no saturar el prompt
+  const svgItems = catalog.filter(c => c.svg_url || c.svgUrl).slice(0, 6);
+  const svgContexts = [];
+  if(svgItems.length > 0){
+    setLoad(true, 'Cargando dibujos técnicos…');
+    for(const item of svgItems){
+      const url = item.svg_url || item.svgUrl;
+      const svg = await fetchSVG(url);
+      if(svg) svgContexts.push({ code: item.code, name: item.name, svg });
+    }
+  }
+
+  const svgNote = svgContexts.length > 0
+    ? '\n\nDIBUJOS TÉCNICOS SVG (secciones transversales de perfiles del catálogo):\n' +
+      svgContexts.map(s => `--- ${s.code} "${s.name}" ---\n${s.svg}`).join('\n\n')
+    : '';
+
+  setLoad(true, 'Analizando imagen…');
 
   const catDesc = catalog.length
     ? 'CATÁLOGO:\n' + catalog.map(c =>
@@ -883,7 +921,7 @@ async function startAnalysis(){
 
   const system = `Eres un experto en inventario de encofrado metálico Strongforms. Cuenta con precisión cada tipo de pieza visible.
 
-${catDesc}${mixNote}${refNote}
+${catDesc}${mixNote}${refNote}${svgNote}
 
 REGLAS GENERALES:
 1. Confianza ≥ 95% + pieza del catálogo → known:true
@@ -1886,9 +1924,28 @@ async function pullConfigFromScript(){
         }
       } catch(ex){}
     }
-    // Cargar catalogo del Sheet si hay mas detalle
-    if(d.catalog && d.catalog.length > 0 && catalog.length === 0){
-      catalog = d.catalog;
+    // Cargar catálogo del Sheet si tiene más detalle que el local
+    if(d.catalog && d.catalog.length > 0){
+      // Mapear campos del Sheet al formato de la app
+      const sheetCat = d.catalog.map(function(item){
+        return {
+          id:           item.id || 'c_' + item.code,
+          code:         item.code || '',
+          name:         item.name || item.code || '',
+          alias:        item.alias || '',
+          type:         (item.type || 'perfil').toLowerCase(),
+          h:            parseFloat(String(item.h_mm || '').replace(',','.')) || null,
+          a:            parseFloat(String(item.a_mm || '').replace(',','.')) || null,
+          b:            parseFloat(String(item.b_mm || '').replace(',','.')) || null,
+          peso:         parseFloat(String(item.peso_kg_m || '').replace(',','.')) || null,
+          svg_url:      item.svg_url || '',
+          glb_url:      item.glb_url || '',
+          emoji:        item.emoji || '🔩',
+          totalScanned: parseInt(item.total_escaneado || 0) || 0,
+          renderB64:    null
+        };
+      });
+      catalog = sheetCat;
       localStorage.setItem('sf4_cat', JSON.stringify(catalog));
     }
     return true;
