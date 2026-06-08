@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Strongforms · Inventario</title>
-<meta name="version" content="v4.16">
+<meta name="version" content="v4.17">
 <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600&family=Epilogue:wght@700;900&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════
@@ -158,8 +158,8 @@ input[type=file]{display:none}
 .col-lbl{flex:1;text-align:center;font-size:.46rem;color:var(--text3)}
 .row-lbls{position:absolute;left:0;top:0;bottom:0;display:flex;flex-direction:column}
 .row-lbl{flex:1;display:flex;align-items:center;font-size:.46rem;color:var(--text3)}
-.gplan{position:relative;width:100%;aspect-ratio:16/9;border-radius:7px;overflow:hidden;background:var(--s3);border:1px solid var(--border)}
-.plan-bg{width:100%;height:100%;object-fit:cover;opacity:.4}
+.gplan{position:relative;width:100%;border-radius:7px;overflow:hidden;background:var(--s3);border:1px solid var(--border)}
+.plan-bg{width:100%;height:100%;object-fit:contain;opacity:.5;display:block}
 .govl{position:absolute;inset:0;display:grid}
 .gcell{border:1px solid rgba(255,255,255,.04);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .gcell:hover{background:rgba(232,151,30,.15);border-color:rgba(232,151,30,.35)}
@@ -254,7 +254,7 @@ input[type=file]{display:none}
 <!-- ═══ TOPBAR ═══ -->
 <div class="topbar">
   <div class="logo" id="logoBtn">
-    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.16</span>
+    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.17</span>
   </div>
   <div class="pill hidden" id="drivePill"><div class="dot"></div><span id="drivePillTxt">Drive ✓</span></div>
 </div>
@@ -881,16 +881,25 @@ async function startAnalysis(){
     ? `\nIMAGENES REFERENCIA: las primeras ${refBlocks.length} imágenes son renders de catálogo. La(s) última(s) son la foto real.`
     : '';
 
-  const system = `Eres un experto en inventario de encofrado metálico Strongforms. Cuenta piezas con precisión.
+  const system = `Eres un experto en inventario de encofrado metálico Strongforms. Cuenta con precisión cada tipo de pieza visible.
 
 ${catDesc}${mixNote}${refNote}
 
-REGLAS:
+REGLAS GENERALES:
 1. Confianza ≥ 95% + pieza del catálogo → known:true
 2. Cualquier duda, pieza parecida, parcialmente oculta, mala foto → known:false, confidence < 0.95
-3. Si no la reconoces → known:false, describe todo lo que ves (dimensiones visibles, forma, tipo perfil)
-4. SIEMPRE incluye dims estimadas {h,a,b} aunque sean aproximadas — ayuda al operario a confirmar
+3. Si no la reconoces → known:false, describe forma, sección y dimensiones visibles
+4. SIEMPRE incluye dims estimadas {h,a,b} aunque sean aproximadas
 5. El conteo es prioritario — si no estás seguro del nombre pero puedes contar, hazlo
+
+INSTRUCCIONES ESPECIALES PARA PERFILES METÁLICOS:
+- Perfiles con ALAS HACIA ARRIBA o HACIA ABAJO son la MISMA pieza — no los cuentes como tipos distintos
+- Un perfil girado 180° sigue siendo el mismo perfil
+- Distingue tipos por SECCIÓN (L, U, T, rectangular, tubular) y DIMENSIONES visibles
+- Si hay distintos tipos en el mismo paquete, lístalos SEPARADOS
+- Cuenta UNIDADES individuales, no alturas de pila
+- Si el paquete es muy denso, indica en alerts el rango estimado (ej: "entre 8 y 12 unidades")
+- Modo mixto activo: busca activamente diferencias de sección aunque sean sutiles
 
 Responde SOLO JSON sin markdown:
 {"pieces":[{"label":"nombre o descripción","count":N,"known":bool,"confidence":0.0-1.0,"type":"placa|perfil","dims":{"h":null,"a":null,"b":null},"reason":"1 frase breve"}],"globalConfidence":0.0-1.0,"notes":null,"alerts":null}`;
