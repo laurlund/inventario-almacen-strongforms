@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Strongforms · Inventario</title>
-<meta name="version" content="v4.15">
+<meta name="version" content="v4.16">
 <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600&family=Epilogue:wght@700;900&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════
@@ -254,7 +254,7 @@ input[type=file]{display:none}
 <!-- ═══ TOPBAR ═══ -->
 <div class="topbar">
   <div class="logo" id="logoBtn">
-    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.15</span>
+    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.16</span>
   </div>
   <div class="pill hidden" id="drivePill"><div class="dot"></div><span id="drivePillTxt">Drive ✓</span></div>
 </div>
@@ -732,7 +732,7 @@ input[type=file]{display:none}
 // ── APPS SCRIPT — fuente única de verdad (sin OAuth) ──
 const SCRIPT_URL  = 'https://script.google.com/macros/s/AKfycbxmKzNVa67SJMOelA-cdUE0oeaVNLr2h9KnvJwhfna5XvK1R9BckKScLaFllmpOpjm-Ug/exec';
 const DRIVE_FOTOS = '1zkBtfb3eQcTwItMTcxmyuMDqsc_R7E-I';
-const PLAN_URL_DEFAULT = 'https://drive.google.com/uc?export=view&id=1QZS0Vs8tGyq1lEjCrIoA5j4lmqJezQXd';
+const PLAN_URL_DEFAULT = 'https://lh3.googleusercontent.com/d/1QZS0Vs8tGyq1lEjCrIoA5j4lmqJezQXd';
 
 // ── STATE ──
 let catalog     = JSON.parse(localStorage.getItem('sf4_cat')  || '[]');
@@ -1146,7 +1146,7 @@ function buildGrid(){
     }
   }
 
-  var planSrc = gridCfg.planImg || 'https://drive.google.com/uc?export=view&id=1QZS0Vs8tGyq1lEjCrIoA5j4lmqJezQXd';
+  var planSrc = gridCfg.planImg || 'https://lh3.googleusercontent.com/d/1QZS0Vs8tGyq1lEjCrIoA5j4lmqJezQXd';
   document.getElementById('planBg').src = planSrc;
   document.getElementById('planBg').classList.remove('hidden');
 
