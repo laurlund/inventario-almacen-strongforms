@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Strongforms · Inventario</title>
-<meta name="version" content="v4.14b">
+<meta name="version" content="v4.15">
 <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600&family=Epilogue:wght@700;900&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════
@@ -254,7 +254,7 @@ input[type=file]{display:none}
 <!-- ═══ TOPBAR ═══ -->
 <div class="topbar">
   <div class="logo" id="logoBtn">
-    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.14</span>
+    Strongforms <span>Inventario · Almacén</span><span style="font-size:.45rem;color:var(--text3);letter-spacing:1px"> v4.15</span>
   </div>
   <div class="pill hidden" id="drivePill"><div class="dot"></div><span id="drivePillTxt">Drive ✓</span></div>
 </div>
@@ -1479,13 +1479,10 @@ function xorDecipher(enc, key){
   } catch{ return ''; }
 }
 
-// Leer/escribir credenciales cifradas
-function getCred(name){
-  try{ return atob(localStorage.getItem('sf4_c_'+name) || ''); } catch(e){ return ''; }
-}
-function setCred(name, val){
-  try{ localStorage.setItem('sf4_c_'+name, btoa(unescape(encodeURIComponent(val)))); } catch(e){}
-}
+// Leer/escribir credenciales — almacenamiento simple
+// (localStorage de dispositivo personal, riesgo aceptable para uso interno)
+function getCred(name){ return localStorage.getItem('sf4_c_'+name) || ''; }
+function setCred(name, val){ localStorage.setItem('sf4_c_'+name, val); }
 
 // Obtener API key para uso en startAnalysis
 function getApiKey(){ return getCred('apikey'); }
@@ -1856,9 +1853,9 @@ async function pullConfigFromScript(){
     var d = await getScript({ action: 'sync' });
     if(!d || d.status !== 'ok' || !d.config) return false;
     var cfg = d.config;
-    if(cfg.apikey)   { localStorage.setItem('sf4_c_apikey',   btoa(unescape(encodeURIComponent(cfg.apikey)))); }
+    if(cfg.apikey)   { localStorage.setItem('sf4_c_apikey', cfg.apikey); }
     if(cfg.model)    { localStorage.setItem('sf4_model',      cfg.model); }
-    if(cfg.clientid) { localStorage.setItem('sf4_c_clientid', btoa(unescape(encodeURIComponent(cfg.clientid)))); }
+    if(cfg.clientid) { localStorage.setItem('sf4_c_clientid', cfg.clientid); }
     if(cfg.pw)       { localStorage.setItem('sf4_pw',         cfg.pw); }
     if(cfg.grid_cols || cfg.grid_rows){
       gridCfg = {
