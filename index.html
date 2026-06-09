@@ -484,7 +484,7 @@ var selCell = null;
 var oauthToken = null;
 var adminOk = false;
 var pendingPlan = null;
-var history = [];
+var scanHistory = [];
 
 // ── RESIZE FOTOS ─────────────────────────────
 function resize(file, cb) {
@@ -902,7 +902,7 @@ function buildGrid() {
       var cell = document.createElement('div');
       cell.className = 'gcell'; cell.dataset.col = l; cell.dataset.row = ri;
       cell.innerHTML = '<span class="gcell-l">' + coord + '</span>';
-      if (history.some(function(h) { return (h.Zona||h.zona) === coord; })) cell.classList.add('occ');
+      if (scanHistory.some(function(h) { return (h.Zona||h.zona) === coord; })) cell.classList.add('occ');
       cell.addEventListener('click', (function(ll, rr, cc) {
         return function() { selectCell(ll, rr, cc); };
       })(l, ri, cell));
@@ -988,7 +988,7 @@ async function saveRecord() {
   } catch(e) {}
 
   // Añadir al historial en memoria
-  history.unshift({ ID_Registro: id, Fecha: dateISO, Almacen: alm, Nave: nave, Zona: zona, pieces: resolved });
+  scanHistory.unshift({ ID_Registro: id, Fecha: dateISO, Almacen: alm, Nave: nave, Zona: zona, pieces: resolved });
 
   setLoad(false);
   document.getElementById('saveRow').style.display = 'none';
@@ -1026,7 +1026,7 @@ async function loadHistory() {
   try {
     var d = await scriptGet({ action: 'getInventario' });
     if (d.status !== 'ok') throw new Error(d.msg);
-    history = d.registros || [];
+    scanHistory = d.registros || [];
     renderHistory();
   } catch(e) {
     document.getElementById('histList').innerHTML = '<div class="empty">Error cargando historial.</div>';
@@ -1035,17 +1035,17 @@ async function loadHistory() {
 
 function renderHistory() {
   var list = document.getElementById('histList');
-  if (!history.length) { list.innerHTML = '<div class="empty">Sin escaneos guardados.</div>'; return; }
+  if (!scanHistory.length) { list.innerHTML = '<div class="empty">Sin escaneos guardados.</div>'; return; }
   // Agrupar por ID_Registro
   var grupos = {};
-  history.forEach(function(r) {
+  scanHistory.forEach(function(r) {
     var id = r.ID_Registro || r.id || 'x';
     if (!grupos[id]) grupos[id] = { fecha: r.Fecha, alm: r.Almacen, nave: r.Nave, zona: r.Zona, piezas: [] };
     grupos[id].piezas.push({ name: r.Pieza_Codigo, count: r.Cantidad, conf: r.Confianza_IA });
   });
   var ids = Object.keys(grupos).reverse();
   document.getElementById('kpiScans').textContent = ids.length;
-  var total = history.reduce(function(s,r){ return s + (parseInt(r.Cantidad)||0); }, 0);
+  var total = scanHistory.reduce(function(s,r){ return s + (parseInt(r.Cantidad)||0); }, 0);
   document.getElementById('kpiUds').textContent = total;
   list.innerHTML = ids.map(function(id) {
     var g = grupos[id];
@@ -1063,9 +1063,9 @@ function renderHistory() {
 }
 
 function exportCSV() {
-  if (!history.length) { alert('Sin datos en el historial.'); return; }
+  if (!scanHistory.length) { alert('Sin datos en el historial.'); return; }
   var headers = ['ID_Registro','Fecha','Almacen','Nave','Zona','Pieza_Codigo','Cantidad','Confianza_IA','Tipo','Observaciones'];
-  var rows = history.map(function(r) {
+  var rows = scanHistory.map(function(r) {
     return headers.map(function(h) { return '"' + String(r[h]||'').replace(/"/g,'""') + '"'; }).join(',');
   });
   var csv = [headers.join(',')].concat(rows).join('\n');
