@@ -334,6 +334,8 @@ input[type=file]{display:none}
     <input type="number" id="pieceCountIn" min="1" step="1">
     <div class="lbl" style="margin-top:8px">Alias (opcional)</div>
     <input type="text" id="pieceAliasIn" placeholder="l macho, tubular grande…">
+    <div class="lbl" style="margin-top:8px">Descripción libre <span style="color:var(--text3);font-weight:400">(si no sabes el nombre)</span></div>
+    <textarea id="pieceDescIn" rows="2" placeholder="Ej: perfil en L grande, alas de unos 10cm, color gris, pallet compacto de unos 12 unidades…" style="margin-top:0"></textarea>
   </div>
   <div class="brow" style="padding:0;margin-top:4px">
     <button class="btn btn-ghost" onclick="skipPiece()">Omitir</button>
@@ -407,8 +409,8 @@ input[type=file]{display:none}
           <input type="file" id="admPlanIn" accept="image/*" onchange="handleAdminPlan(event)" style="display:block;color:var(--text);font-size:.75rem">
         </div>
         <div class="r2">
-          <div class="field"><div class="lbl">Columnas</div><input type="number" id="admCols" min="2" max="26"></div>
-          <div class="field"><div class="lbl">Filas</div><input type="number" id="admRows" min="2" max="20"></div>
+          <div class="field"><div class="lbl">Columnas</div><input type="number" id="admCols" min="2" max="26" value="10"></div>
+          <div class="field"><div class="lbl">Filas</div><input type="number" id="admRows" min="2" max="20" value="14"></div>
         </div>
         <button class="btn btn-acc" onclick="saveGridCfg()">Guardar cuadrícula</button>
       </div>
@@ -537,8 +539,8 @@ async function boot() {
     cfg.apikey    = tryDecode(c.apikey    || '');
     cfg.model     = c.model     || 'claude-sonnet-4-5';
     cfg.pw        = c.pw        || btoa(DEFAULT_PW);
-    cfg.grid_cols = parseInt(c.grid_cols) || 5;
-    cfg.grid_rows = parseInt(c.grid_rows) || 7;
+    cfg.grid_cols = parseInt(c.grid_cols) || 10;
+    cfg.grid_rows = parseInt(c.grid_rows) || 14;
     cfg.grid_plan = c.grid_plan || null;
     cfg.loc_alm   = c.loc_alm  || '';
     cfg.loc_nave  = c.loc_nave || '';
@@ -833,6 +835,7 @@ function openIdentModal(item) {
   document.getElementById('pieceCountIn').value = item.count;
   document.getElementById('aiCountHint').textContent = item.count;
   document.getElementById('pieceAliasIn').value = '';
+  document.getElementById('pieceDescIn').value = '';
   document.getElementById('identModal').style.display = 'flex';
   setTimeout(function() { document.getElementById('pieceNameIn').focus(); }, 150);
 }
@@ -844,10 +847,16 @@ function selectSug(name, el) {
 }
 
 function confirmPiece() {
-  var name  = document.getElementById('pieceNameIn').value.trim(); if (!name) return;
+  var name  = document.getElementById('pieceNameIn').value.trim();
+  var desc  = document.getElementById('pieceDescIn').value.trim();
   var count = parseInt(document.getElementById('pieceCountIn').value) || current.count;
-  var id    = findCatId(name);
-  resolved.push({ id: id, name: name, count: count, confidence: 1.0, type: current.type });
+
+  // Si no hay nombre, usar la descripción libre
+  if (!name && !desc) { showToast('⚠ Escribe un nombre o descripción'); return; }
+  var finalName = name || ('📝 ' + desc.slice(0, 60));
+
+  var id = findCatId(name);
+  resolved.push({ id: id, name: finalName, count: count, confidence: 1.0, type: current.type });
   document.getElementById('identModal').style.display = 'none';
   current = null; nextUnknown();
 }
@@ -883,7 +892,7 @@ function findCatId(name) {
 
 // ── GRID ──────────────────────────────────────
 function buildGrid() {
-  var cols = cfg.grid_cols || 5, rows = cfg.grid_rows || 7;
+  var cols = cfg.grid_cols || 10, rows = cfg.grid_rows || 14;
   var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.slice(0, cols);
   var ovl = document.getElementById('govl');
   ovl.style.gridTemplateColumns = 'repeat(' + cols + ',1fr)';
@@ -1120,8 +1129,8 @@ function openAdmin() {
   document.getElementById('admApiKey').value   = cfg.apikey;
   document.getElementById('admModel').value    = cfg.model || 'claude-sonnet-4-5';
   document.getElementById('admClientId').value = cfg.clientid || '';
-  document.getElementById('admCols').value     = cfg.grid_cols || 5;
-  document.getElementById('admRows').value     = cfg.grid_rows || 7;
+  document.getElementById('admCols').value     = cfg.grid_cols || 10;
+  document.getElementById('admRows').value     = cfg.grid_rows || 14;
   document.getElementById('admAlm').value      = cfg.loc_alm  || '';
   document.getElementById('admNave').value     = cfg.loc_nave || '';
   updateDriveUI();
@@ -1140,8 +1149,8 @@ async function saveAndSync(updates) {
       model:     cfg.model,
       pw:        cfg.pw,
       clientid:  cfg.clientid,
-      grid_cols: String(cfg.grid_cols),
-      grid_rows: String(cfg.grid_rows),
+      grid_cols: String(cfg.grid_cols || 10),
+      grid_rows: String(cfg.grid_rows || 14),
       grid_plan: cfg.grid_plan || '',
       loc_alm:   cfg.loc_alm,
       loc_nave:  cfg.loc_nave
